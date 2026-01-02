@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { 
@@ -12,32 +13,38 @@ import {
   addDoc, 
   deleteDoc,
   doc,
+  setDoc,
+  getDoc,
   serverTimestamp
 } from 'firebase/firestore';
 import { 
   Calendar, 
   Clock, 
   Phone, 
-  Menu,
-  X,
-  Lock,
-  Search,
-  Trash2,
-  ChevronLeft,
-  ChevronRight,
-  Star,
-  Leaf,
-  Activity,
-  Heart,
-  MapPin,
-  ArrowRight,
+  Menu, 
+  X, 
+  Lock, 
+  Search, 
+  Trash2, 
+  ChevronLeft, 
+  ChevronRight, 
+  Star, 
+  Leaf, 
+  Activity, 
+  Heart, 
+  MapPin, 
+  ArrowRight, 
   MessageCircle, 
-  Printer
+  Printer,
+  Settings,
+  Grid,
+  List
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
 // IMPORTANT: Replace these values with your actual Firebase project keys
-// Go to Firebase Console -> Project Settings -> General -> Your Apps
+// --- CONFIGURATION ---
+// IMPORTANT: Replace these values with your actual Firebase project keys
 const firebaseConfig = {
   apiKey: "AIzaSyDJosQQhRGcebaxJQ37gNTnqXawsYHO9oI",
   authDomain: "harmony-acupuncture.firebaseapp.com",
@@ -46,6 +53,7 @@ const firebaseConfig = {
   messagingSenderId: "78608558880",
   appId: "1:78608558880:web:adbb1fe3596d2b88c58545"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -75,21 +83,22 @@ const TRANSLATIONS = {
     bookingTitle: "Schedule Your Visit",
     bookingSubtitle: "Select a time that works for you. Private treatment sessions available every 15 minutes.",
     selectDate: "Select Date",
-    slotsAvailable: "slot available",
     full: "Booked",
-    blocked: "Reserved",
+    blocked: "Blocked",
     bookSlot: "Request Appointment",
-    name: "Full Name",
+    firstName: "First Name",
+    lastName: "Last Name",
     phone: "Phone Number",
     email: "Email Address",
     enterDetails: "Patient Details",
+    requiredFields: "*All fields are required",
     confirm: "Confirm Request",
     cancel: "Cancel",
     adminMode: "Admin Portal",
     adminPass: "Access Code",
     bookingSuccess: "Appointment Requested",
     viewBookings: "Scheduled Patients",
-    noBookings: "No appointments scheduled for this slot.",
+    noBookings: "No appointments scheduled.",
     myBookings: "My Appointments",
     findBooking: "Manage My Appointments",
     enterPhoneToFind: "Enter your phone number to find existing appointments.",
@@ -98,6 +107,12 @@ const TRANSLATIONS = {
     confirmCancel: "Cancel this appointment?",
     past: "Past",
     footer: "© 2025 Wellspring Acupuncture. All rights reserved.",
+    settings: "Settings",
+    maxDateLabel: "Last Allowed Booking Date",
+    save: "Save Settings",
+    saved: "Settings Saved!",
+    weekView: "Week View",
+    dayView: "Day View",
     servicesPage: {
       title: "Our Specialties",
       subtitle: "Comprehensive care for your well-being",
@@ -110,16 +125,16 @@ const TRANSLATIONS = {
     },
     aboutPage: {
       title: "Our Philosophy",
-      p1: "Founded on the principles of compassion and integrity, Wellspring Acupuncture has served the community for over 15 years. We strive to create a partnership with every patient.",
+      p1: "Founded on the principles of compassion and integrity, Wellspring Acupuncture has served the community for over 15 years.",
       p2: "Our practitioners are licensed and board-certified, bringing decades of combined experience to your treatment plan.",
       stats: ["15+ Years", "5k+ Patients", "Licensed Pros"]
     },
     testimonialsPage: {
       title: "Patient Stories",
       list: [
-        { name: "Sarah J.", text: "The most relaxing medical experience I've ever had. My back pain is finally manageable without medication." },
-        { name: "Michael C.", text: "Professional, clean, and incredibly effective. I recommend Wellspring to everyone I know." },
-        { name: "Emily R.", text: "Dr. Wei really listens. I felt heard and cared for from the moment I walked in." }
+        { name: "Sarah J.", text: "The most relaxing medical experience I've ever had." },
+        { name: "Michael C.", text: "Professional, clean, and incredibly effective." },
+        { name: "Emily R.", text: "Dr. Wei really listens. I felt heard and cared for." }
       ]
     }
   },
@@ -140,18 +155,19 @@ const TRANSLATIONS = {
     bookNow: "立即預約",
     learnMore: "了解更多",
     welcomeTitle: "歡迎來到源泉",
-    welcomeText: "我們致力於提供個性化的護理，解決您健康問題的根源。我們的診所結合了古老的智慧與現代醫學，為您提供一個療癒的避風港。",
+    welcomeText: "我們致力於提供個性化的護理，解決您健康問題的根源。",
     bookingTitle: "預約您的診療",
     bookingSubtitle: "選擇適合您的時間。每15分鐘提供一個私人治療時段。",
     selectDate: "選擇日期",
-    slotsAvailable: "個名額",
     full: "已預約",
     blocked: "保留",
     bookSlot: "預約時段",
-    name: "姓名",
+    firstName: "名字",
+    lastName: "姓氏",
     phone: "電話號碼",
     email: "電子郵件",
     enterDetails: "患者資料",
+    requiredFields: "*所有欄位皆為必填",
     confirm: "確認預約",
     cancel: "取消",
     adminMode: "管理後台",
@@ -167,6 +183,12 @@ const TRANSLATIONS = {
     confirmCancel: "確定要取消此預約嗎？",
     past: "已過",
     footer: "© 2025 源泉針灸中心 版權所有",
+    settings: "設置",
+    maxDateLabel: "最後開放預約日期",
+    save: "保存設置",
+    saved: "設置已保存！",
+    weekView: "週視圖",
+    dayView: "日視圖",
     servicesPage: {
       title: "專業服務",
       subtitle: "為您量身定制的整體療法",
@@ -179,22 +201,22 @@ const TRANSLATIONS = {
     },
     aboutPage: {
       title: "我們的理念",
-      p1: "源泉針灸中心建立在同情和誠信的原則之上，服務社區已超過15年。我們致力於與每一位患者建立夥伴關係。",
+      p1: "源泉針灸中心建立在同情和誠信的原則之上，服務社區已超過15年。",
       p2: "我們的醫師均持有執照和委員會認證，為您的治療計劃帶來數十年的綜合經驗。",
       stats: ["15年+ 經驗", "5000+ 患者", "認證專家"]
     },
     testimonialsPage: {
       title: "患者心聲",
       list: [
-        { name: "Sarah J.", text: "這是我經歷過最放鬆的醫療體驗。我的背痛終於在不吃藥的情況下得到了控制。" },
-        { name: "Michael C.", text: "專業、乾淨，而且非常有效。我向所有認識的人推薦源泉針灸。" },
-        { name: "Emily R.", text: "魏醫生真的很用心聽。從我走進來的那一刻起，我就感到了被關心。" }
+        { name: "Sarah J.", text: "這是我經歷過最放鬆的醫療體驗。" },
+        { name: "Michael C.", text: "專業、乾淨，而且非常有效。" },
+        { name: "Emily R.", text: "魏醫生真的很用心聽。" }
       ]
     }
   }
 };
 
-const MAX_SLOTS = 1; // Only one slot available per time
+const MAX_SLOTS = 1;
 
 // --- Helper Functions ---
 
@@ -212,26 +234,22 @@ const formatDate = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-// Generate dynamic slots based on day of week
+// Generate 15-minute intervals for the day
 const getDailySlots = (dateStr) => {
   const date = parseLocal(dateStr);
   const day = date.getDay(); // 0 = Sun, 6 = Sat
   
   if (day === 0) return []; // Sunday closed
 
-  // M-F (1-5): 9am to 4pm last appt
-  // Sat (6): 9am to 3pm last appt
+  // M-F (1-5): 9am to 5pm (last appt start 4:45pm)
+  // Sat (6): 9am to 4pm (last appt start 3:45pm)
   let startHour = 9;
   let endHour = day === 6 ? 15 : 16; 
 
   const slots = [];
   for (let h = startHour; h <= endHour; h++) {
     for (let m = 0; m < 60; m += 15) {
-      // If it's the last hour, we only include :00 (if ending exactly at hour)
-      // BUT requirement is "last appointment 4pm".
-      // So we include 16:00 and stop there.
-      if (h === endHour && m > 0) break;
-      
+      if (h === endHour && m > 0 && day === 6) break; // Sat ends exactly at 4pm? adjust if needed
       slots.push(`${h}:${m === 0 ? '00' : m}`);
     }
   }
@@ -271,6 +289,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [lang, setLang] = useState('en');
   const [appointments, setAppointments] = useState([]);
+  const [settings, setSettings] = useState({ maxBookingDate: '' });
   const [isAdmin, setIsAdmin] = useState(false);
   
   const [currentPage, setCurrentPage] = useState('home');
@@ -278,14 +297,24 @@ export default function App() {
 
   const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
   const [viewMonth, setViewMonth] = useState(new Date());
+  
+  // Weekly View State
+  const [viewMode, setViewMode] = useState('day'); // 'day' or 'week'
+  const [weekStartDate, setWeekStartDate] = useState(new Date());
+
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  
   const [selectedSlot, setSelectedSlot] = useState(null);
   
-  const [name, setName] = useState('');
+  // New Form State
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  
   const [adminPass, setAdminPass] = useState('');
   const [formError, setFormError] = useState('');
 
@@ -296,30 +325,48 @@ export default function App() {
   const t = TRANSLATIONS[lang];
 
   useEffect(() => {
-    // Basic anonymous auth
-    signInAnonymously(auth).catch((err) => {
-      console.error("Authentication Error: ", err);
-    });
+    signInAnonymously(auth).catch(err => console.error(err));
     return onAuthStateChanged(auth, setUser);
   }, []);
 
+  // Fetch Appointments
   useEffect(() => {
     if (!user) return;
-    
-    // Standard Firestore collection path
     const q = collection(db, 'appointments');
-
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setAppointments(data);
-    }, (error) => console.error("Error fetching appointments:", error));
-    
+    });
     return () => unsubscribe();
   }, [user]);
 
-  const getSlotData = (slotTime) => {
+  // Fetch Settings
+  useEffect(() => {
+    if (!user) return;
+    const settingsDoc = doc(db, 'settings', 'config');
+    const unsubscribe = onSnapshot(settingsDoc, (docSnap) => {
+      if (docSnap.exists()) {
+        setSettings(docSnap.data());
+      }
+    });
+    return () => unsubscribe();
+  }, [user]);
+
+  // --- Logic ---
+
+  const saveSettings = async (e) => {
+    e.preventDefault();
+    try {
+      await setDoc(doc(db, 'settings', 'config'), settings, { merge: true });
+      setIsSettingsOpen(false);
+    } catch (err) {
+      console.error("Error saving settings:", err);
+    }
+  };
+
+  const getSlotData = (dateStr, slotTime) => {
     const slotAppointments = appointments.filter(
-      app => app.date === selectedDate && app.hour === slotTime
+      app => app.date === dateStr && app.hour === slotTime
     );
     const isBlocked = slotAppointments.some(app => app.type === 'blocked');
     const bookings = slotAppointments.filter(app => app.type === 'booking');
@@ -327,32 +374,74 @@ export default function App() {
     return { isBlocked, bookings, remaining: isBlocked ? 0 : remaining };
   };
 
+  const isDateAllowed = (dateStr) => {
+    if (!settings.maxBookingDate) return true; // No limit if not set
+    const selected = parseLocal(dateStr);
+    const max = parseLocal(settings.maxBookingDate);
+    // Compare only dates
+    return selected <= max;
+  };
+
   const handleBookClick = (slotTime) => {
     setSelectedSlot(slotTime);
     setIsBookingModalOpen(true);
     setFormError('');
+    setFirstName('');
+    setLastName('');
     setEmail('');
-    setName('');
     setPhone('');
   };
 
   const submitBooking = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim()) {
-      setFormError(lang === 'en' ? 'Name and Phone are required' : '姓名和電話為必填');
+    // Validate all fields
+    if (!firstName.trim() || !lastName.trim() || !phone.trim() || !email.trim()) {
+      setFormError(t.requiredFields);
       return;
     }
+    
+    const fullName = `${firstName.trim()} ${lastName.trim()}`;
+
     try {
+      // 1. Save to appointments collection
       await addDoc(collection(db, 'appointments'), {
         date: selectedDate,
         hour: selectedSlot,
         type: 'booking',
-        name,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        name: fullName, 
         phone,
         email,
         userId: user.uid,
         createdAt: serverTimestamp()
       });
+
+      // 2. Trigger Email Notification (Requires "Trigger Email" Firebase Extension)
+      await addDoc(collection(db, 'mail'), {
+        to: [email, 'wellspringacuherb@gmail.com'],
+        message: {
+          subject: `Appointment Confirmation: ${fullName} on ${selectedDate}`,
+          text: `Dear ${firstName},\n\nYour appointment has been confirmed.\n\nDate: ${selectedDate}\nTime: ${selectedSlot}\nLocation: 655 Concord Street, Framingham 01702\nPhone: 508-628-1888\n\nTo cancel or reschedule, please visit our website.\n\nThank you,\nWellspring Acupuncture`,
+          html: `
+            <div style="font-family: sans-serif; padding: 20px; color: #333;">
+              <h2 style="color: #064e3b;">Appointment Confirmed</h2>
+              <p>Dear ${firstName},</p>
+              <p>Your appointment has been successfully booked.</p>
+              <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #059669; margin: 20px 0;">
+                <p><strong>Date:</strong> ${selectedDate}</p>
+                <p><strong>Time:</strong> ${selectedSlot}</p>
+                <p><strong>Patient:</strong> ${fullName}</p>
+              </div>
+              <p><strong>Location:</strong><br/>655 Concord Street, Framingham 01702</p>
+              <p><strong>Phone:</strong> 508-628-1888</p>
+              <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+              <p style="font-size: 12px; color: #666;">Wellspring Acupuncture</p>
+            </div>
+          `
+        }
+      });
+      
       setIsBookingModalOpen(false);
     } catch (err) {
       console.error(err);
@@ -371,19 +460,19 @@ export default function App() {
     }
   };
 
-  const toggleBlockSlot = async (slotTime, isCurrentlyBlocked) => {
+  const toggleBlockSlot = async (dateStr, slotTime, isCurrentlyBlocked) => {
     if (!isAdmin) return;
     try {
       if (isCurrentlyBlocked) {
         const blockDoc = appointments.find(
-          app => app.date === selectedDate && app.hour === slotTime && app.type === 'blocked'
+          app => app.date === dateStr && app.hour === slotTime && app.type === 'blocked'
         );
         if (blockDoc) {
           await deleteDoc(doc(db, 'appointments', blockDoc.id));
         }
       } else {
         await addDoc(collection(db, 'appointments'), {
-          date: selectedDate,
+          date: dateStr,
           hour: slotTime,
           type: 'blocked',
           blockedBy: user.uid,
@@ -410,7 +499,6 @@ export default function App() {
     const results = appointments.filter(
       app => app.phone === cancelPhone && app.type === 'booking'
     );
-    // Sort logic updated for string times if needed, but ISO date sort helps
     results.sort((a, b) => new Date(a.date) - new Date(b.date) || a.hour.localeCompare(b.hour));
     setFoundBookings(results);
     setHasSearched(true);
@@ -429,230 +517,307 @@ export default function App() {
     setViewMonth(newDate);
   };
 
-  const getServiceIcon = (index) => {
-    if (index % 4 === 0) return <Leaf size={32} />;
-    if (index % 4 === 1) return <Activity size={32} />;
-    if (index % 4 === 2) return <Heart size={32} />;
-    return <Star size={32} />;
+  const changeWeek = (offset) => {
+    const newDate = new Date(weekStartDate);
+    newDate.setDate(newDate.getDate() + (offset * 7));
+    setWeekStartDate(newDate);
   };
 
-  const renderHome = () => (
-    <div className="animate-in fade-in duration-500">
-      <div className="relative bg-stone-100 h-[500px] flex items-center justify-center overflow-hidden">
-         <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/90 to-emerald-800/80"></div>
-         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white">
-           <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight tracking-wide">
-             {t.heroTitle}
-           </h1>
-           <p className="text-emerald-50 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-             {t.heroSubtitle}
-           </p>
-           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-             <button onClick={() => setCurrentPage('appointments')} className="bg-white text-emerald-900 px-8 py-4 rounded-sm font-semibold tracking-widest hover:bg-emerald-50 transition-all uppercase text-sm">
-               {t.bookNow}
-             </button>
-             <button onClick={() => setCurrentPage('about')} className="border border-white text-white px-8 py-4 rounded-sm font-semibold tracking-widest hover:bg-white/10 transition-all uppercase text-sm">
-               {t.learnMore}
-             </button>
-           </div>
-         </div>
-      </div>
+  // --- Renderers ---
 
-      <div className="max-w-4xl mx-auto px-6 py-20 text-center">
-        <h2 className="text-3xl font-serif font-bold text-emerald-900 mb-6">{t.welcomeTitle}</h2>
-        <div className="h-0.5 w-20 bg-emerald-600 mx-auto mb-8"></div>
-        <p className="text-stone-600 text-lg leading-loose">{t.welcomeText}</p>
-      </div>
+  const renderWeekView = () => {
+    // Generate dates for the week (Start from Sunday or Monday? Let's do Sunday for standard calendar view)
+    const dates = [];
+    const start = new Date(weekStartDate);
+    // Adjust to Sunday of the current week
+    start.setDate(start.getDate() - start.getDay()); 
+    
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      dates.push(formatDate(d));
+    }
 
-      <div className="bg-stone-50 py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <SectionHeader title={t.servicesPage.title} />
-          <div className="grid md:grid-cols-3 gap-8">
-            {t.servicesPage.list.slice(0, 3).map((s, i) => (
-              <div key={i} className="bg-white p-8 shadow-sm border-t-4 border-emerald-800 hover:shadow-md transition-shadow">
-                <div className="mb-4 text-emerald-700">
-                  {getServiceIcon(i)}
-                </div>
-                <h3 className="text-xl font-serif font-bold text-stone-800 mb-3">{s.title}</h3>
-                <p className="text-stone-600 leading-relaxed mb-4">{s.desc}</p>
-                <button onClick={() => setCurrentPage('services')} className="text-emerald-700 text-sm font-bold uppercase tracking-wider flex items-center gap-1 hover:gap-2 transition-all">
-                  Read More <ArrowRight size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderAppointments = () => {
-    // Dynamically calculate available slots based on selectedDate
-    const dailySlots = getDailySlots(selectedDate);
+    // Determine all possible time slots for the week view (union of all daily slots)
+    // We know max range is 9am-5pm
+    const allSlots = [];
+    for (let h = 9; h <= 16; h++) {
+        for (let m = 0; m < 60; m += 15) {
+            allSlots.push(`${h}:${m === 0 ? '00' : m}`);
+        }
+    }
 
     return (
-      <div className="animate-in fade-in duration-500 min-h-screen">
-        <div className="bg-emerald-900 text-white py-16 px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t.bookingTitle}</h2>
-          <p className="text-emerald-100 max-w-2xl mx-auto">{t.bookingSubtitle}</p>
+      <div className="overflow-x-auto">
+        <div className="flex justify-between items-center mb-4">
+           <button onClick={() => changeWeek(-1)} className="p-2 hover:bg-stone-100 rounded-full"><ChevronLeft size={20}/></button>
+           <div className="font-bold text-lg text-emerald-900">
+             {new Date(dates[0]).toLocaleDateString()} - {new Date(dates[6]).toLocaleDateString()}
+           </div>
+           <button onClick={() => changeWeek(1)} className="p-2 hover:bg-stone-100 rounded-full"><ChevronRight size={20}/></button>
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <div className="flex flex-col md:flex-row gap-12">
-            <div className="md:w-1/3">
-              <div className="bg-white p-6 shadow-lg border border-stone-100 sticky top-24">
-                <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-stone-100 pb-2">
-                  <Calendar size={16} /> {t.selectDate}
-                </h3>
-                
-                <div className="mb-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronLeft size={20}/></button>
-                    <span className="font-bold text-stone-700">
-                      {viewMonth.toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { year: 'numeric', month: 'long' })}
-                    </span>
-                    <button onClick={() => changeMonth(1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronRight size={20}/></button>
-                  </div>
-                  
-                  <div className="grid grid-cols-7 text-center mb-2">
-                    {(lang === 'en' ? ['S','M','T','W','T','F','S'] : ['日','一','二','三','四','五','六']).map(d => (
-                      <div key={d} className="text-xs font-bold text-stone-400">{d}</div>
-                    ))}
-                  </div>
-                  
-                  <div className="grid grid-cols-7 gap-1">
-                    {(() => {
-                      const year = viewMonth.getFullYear();
-                      const month = viewMonth.getMonth();
-                      const firstDay = new Date(year, month, 1);
-                      const lastDay = new Date(year, month + 1, 0);
-                      const startDay = firstDay.getDay();
-                      const slots = [];
-                      for(let i=0; i<startDay; i++) slots.push(<div key={`empty-${i}`} />);
-                      for(let i=1; i<=lastDay.getDate(); i++) {
-                        const date = new Date(year, month, i);
-                        const dateStr = formatDate(date);
-                        const isSelected = dateStr === selectedDate;
-                        const isPast = date < new Date(new Date().setHours(0,0,0,0));
-                        slots.push(
-                          <button
-                            key={dateStr}
-                            onClick={() => !isPast && setSelectedDate(dateStr)}
-                            disabled={isPast}
-                            className={`h-9 w-9 mx-auto rounded-full flex items-center justify-center text-sm transition-all ${
-                              isSelected ? 'bg-emerald-800 text-white font-bold' : 'hover:bg-emerald-50 text-stone-600'
-                            } ${isPast ? 'text-stone-300 cursor-not-allowed opacity-50 hover:bg-transparent' : ''}`}
-                          >
-                            {i}
-                          </button>
-                        );
-                      }
-                      return slots;
-                    })()}
-                  </div>
-                </div>
-
-                <div className="bg-emerald-50 p-4 rounded-sm border border-emerald-100">
-                  <div className="text-xs text-emerald-800 font-bold uppercase mb-2">Selected Date</div>
-                  <div className="text-xl font-serif font-bold text-emerald-900">
-                    {parseLocal(selectedDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { weekday: 'long', month: 'long', day: 'numeric' })}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="md:w-2/3">
-              <h3 className="text-lg font-bold text-emerald-900 mb-6 uppercase tracking-wide text-sm border-b border-stone-200 pb-2 flex justify-between items-center">
-                <span>Available Times</span>
-                <span className="text-xs normal-case text-stone-500 font-normal">Eastern Standard Time</span>
-              </h3>
-              
-              {dailySlots.length === 0 ? (
-                <div className="text-center py-12 text-stone-500 bg-stone-50 border border-dashed border-stone-200">
-                  <Clock className="mx-auto mb-2 text-stone-400" />
-                  <p>Closed on Sundays. Please select another date.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {dailySlots.map((slot) => {
-                    const { isBlocked, remaining, bookings } = getSlotData(slot);
-                    const now = new Date();
-                    const isToday = selectedDate === formatDate(now);
-                    
-                    // Compare times for disabling past slots
-                    const [h, m] = slot.split(':').map(Number);
-                    const slotDate = new Date();
-                    slotDate.setHours(h, m, 0, 0);
-                    const isPastTime = isToday && slotDate < now;
-                    const isFull = remaining === 0;
-                    
-                    return (
-                      <div key={slot} className="bg-white border border-stone-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-colors">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-1">
-                            <Clock size={18} className="text-emerald-700" />
-                            <span className="text-xl font-serif font-bold text-stone-800">{slot}</span>
-                          </div>
-                          <div className="flex gap-2 text-xs font-bold uppercase tracking-wider">
-                            {isBlocked ? (
-                              <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.blocked}</span>
-                            ) : isPastTime ? (
-                              <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.past}</span>
-                            ) : isFull ? (
-                              <span className="text-red-500 bg-red-50 px-2 py-0.5 rounded">{t.full}</span>
-                            ) : (
-                              // Removed "1 slot available" text as requested, simply rendering nothing or keeping space
-                              <span className="text-emerald-600 px-2 py-0.5 rounded"></span>
-                            )}
-                          </div>
-                        </div>
-
-                        {!isAdmin ? (
-                          <button
-                            onClick={() => handleBookClick(slot)}
-                            disabled={isFull || isBlocked || isPastTime}
-                            className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-all min-w-[140px] ${
-                              isFull || isBlocked || isPastTime
-                                ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                                : 'bg-emerald-800 text-white hover:bg-emerald-900 shadow-sm'
-                            }`}
-                          >
-                            {isBlocked || isFull || isPastTime ? 'Unavailable' : 'Select'}
-                          </button>
-                        ) : (
-                          <div className="flex gap-2">
-                            <button onClick={() => toggleBlockSlot(slot, isBlocked)} className="text-xs bg-stone-200 hover:bg-stone-300 px-3 py-2 font-bold uppercase">{isBlocked ? t.unblock : t.blockHour}</button>
-                          </div>
-                        )}
-                        
-                        {isAdmin && bookings.length > 0 && (
-                          <div className="w-full sm:w-auto mt-2 sm:mt-0 pt-2 sm:pt-0 sm:border-l sm:border-stone-100 sm:pl-4">
-                            {bookings.map(b => (
-                              <div key={b.id} className="text-xs mb-1 flex items-center justify-between gap-2 bg-stone-50 p-1.5 rounded">
-                                <div className="overflow-hidden">
-                                  <div className="font-bold truncate">{b.name}</div>
-                                  <div className="text-stone-500">{b.phone}</div>
-                                </div>
-                                <div className="flex gap-1">
-                                  <a href={`tel:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Call"><Phone size={12}/></a>
-                                  <a href={`sms:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Text"><MessageCircle size={12}/></a>
-                                  <button onClick={() => handleDeleteBooking(b.id)} className="p-1 bg-white border hover:bg-red-50 text-red-600" title="Delete"><Trash2 size={12}/></button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+        <div className="min-w-[800px] bg-white border border-stone-200 text-xs">
+          {/* Header Row */}
+          <div className="grid grid-cols-8 border-b border-stone-200 bg-stone-50">
+            <div className="p-2 font-bold text-stone-400 text-center border-r">Time</div>
+            {dates.map(dateStr => {
+               const d = parseLocal(dateStr);
+               return (
+                 <div key={dateStr} className={`p-2 text-center border-r font-bold ${d.getDay() === 0 ? 'bg-stone-100 text-stone-400' : 'text-emerald-900'}`}>
+                   {d.toLocaleDateString(lang === 'en'?'en-US':'zh-TW', {weekday:'short'})} <br/>
+                   {d.getDate()}
+                 </div>
+               );
+            })}
           </div>
+
+          {/* Time Rows */}
+          {allSlots.map(time => (
+            <div key={time} className="grid grid-cols-8 border-b border-stone-100 h-10 hover:bg-stone-50">
+              <div className="p-2 text-center border-r font-mono text-stone-500 flex items-center justify-center bg-stone-50">
+                {time}
+              </div>
+              {dates.map(dateStr => {
+                const day = parseLocal(dateStr).getDay();
+                // Check if this time slot is valid for this day (e.g., Sat closes earlier, Sun closed)
+                // Sunday closed
+                if (day === 0) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
+                // Sat after 4pm closed (logic from getDailySlots: endHour 15:45)
+                const [h, m] = time.split(':').map(Number);
+                if (day === 6 && (h > 15 || (h === 15 && m > 45))) {
+                   return <div key={dateStr} className="bg-stone-100 border-r"></div>;
+                }
+
+                const { isBlocked, bookings } = getSlotData(dateStr, time);
+                const isBooked = bookings.length > 0;
+
+                return (
+                  <div 
+                    key={dateStr} 
+                    className={`border-r p-1 transition-colors cursor-pointer flex items-center justify-center
+                      ${isBlocked ? 'bg-stone-200' : isBooked ? 'bg-emerald-100' : 'hover:bg-emerald-50'}
+                    `}
+                    onClick={() => !isBooked && toggleBlockSlot(dateStr, time, isBlocked)}
+                    title={isBooked ? bookings[0].name : isBlocked ? 'Blocked' : 'Available'}
+                  >
+                    {isBlocked && <X size={12} className="text-stone-400"/>}
+                    {isBooked && (
+                      <div className="text-[10px] leading-tight text-emerald-900 font-bold truncate w-full text-center">
+                        {bookings[0].firstName} {/* Show First Name only for brevity */}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 text-xs text-stone-500 flex gap-4">
+           <div className="flex items-center gap-1"><div className="w-3 h-3 bg-stone-200"></div> Blocked</div>
+           <div className="flex items-center gap-1"><div className="w-3 h-3 bg-emerald-100"></div> Booked</div>
+           <div className="flex items-center gap-1"><div className="w-3 h-3 bg-white border"></div> Available (Click to Block)</div>
         </div>
       </div>
     );
   };
+
+  const renderDailyView = () => {
+    const dailySlots = getDailySlots(selectedDate);
+    const isAllowedDate = isDateAllowed(selectedDate);
+
+    return (
+      <div className="flex flex-col md:flex-row gap-12">
+        {/* Calendar Sidebar */}
+        <div className="md:w-1/3">
+          <div className="bg-white p-6 shadow-lg border border-stone-100 sticky top-24">
+            <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-stone-100 pb-2">
+              <Calendar size={16} /> {t.selectDate}
+            </h3>
+            
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-4">
+                <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronLeft size={20}/></button>
+                <span className="font-bold text-stone-700">
+                  {viewMonth.toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { year: 'numeric', month: 'long' })}
+                </span>
+                <button onClick={() => changeMonth(1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronRight size={20}/></button>
+              </div>
+              
+              <div className="grid grid-cols-7 text-center mb-2">
+                {(lang === 'en' ? ['S','M','T','W','T','F','S'] : ['日','一','二','三','四','五','六']).map(d => (
+                  <div key={d} className="text-xs font-bold text-stone-400">{d}</div>
+                ))}
+              </div>
+              
+              <div className="grid grid-cols-7 gap-1">
+                {(() => {
+                  const year = viewMonth.getFullYear();
+                  const month = viewMonth.getMonth();
+                  const firstDay = new Date(year, month, 1);
+                  const lastDay = new Date(year, month + 1, 0);
+                  const startDay = firstDay.getDay();
+                  const slots = [];
+                  for(let i=0; i<startDay; i++) slots.push(<div key={`empty-${i}`} />);
+                  for(let i=1; i<=lastDay.getDate(); i++) {
+                    const date = new Date(year, month, i);
+                    const dateStr = formatDate(date);
+                    const isSelected = dateStr === selectedDate;
+                    const isPast = date < new Date(new Date().setHours(0,0,0,0));
+                    slots.push(
+                      <button
+                        key={dateStr}
+                        onClick={() => !isPast && setSelectedDate(dateStr)}
+                        disabled={isPast}
+                        className={`h-9 w-9 mx-auto rounded-full flex items-center justify-center text-sm transition-all ${
+                          isSelected ? 'bg-emerald-800 text-white font-bold' : 'hover:bg-emerald-50 text-stone-600'
+                        } ${isPast ? 'text-stone-300 cursor-not-allowed opacity-50 hover:bg-transparent' : ''}`}
+                      >
+                        {i}
+                      </button>
+                    );
+                  }
+                  return slots;
+                })()}
+              </div>
+            </div>
+
+            <div className="bg-emerald-50 p-4 rounded-sm border border-emerald-100">
+              <div className="text-xs text-emerald-800 font-bold uppercase mb-2">Selected Date</div>
+              <div className="text-xl font-serif font-bold text-emerald-900">
+                {parseLocal(selectedDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { weekday: 'long', month: 'long', day: 'numeric' })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Time Slots */}
+        <div className="md:w-2/3">
+          <div className="flex justify-between items-center mb-6 border-b border-stone-200 pb-2">
+             <h3 className="text-lg font-bold text-emerald-900 uppercase tracking-wide text-sm">
+                Available Times <span className="text-xs normal-case text-stone-500 font-normal ml-2">EST</span>
+             </h3>
+             {isAdmin && (
+               <button 
+                 onClick={() => setViewMode('week')} 
+                 className="flex items-center gap-1 text-xs bg-stone-100 hover:bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold transition-colors"
+               >
+                 <Grid size={14}/> {t.weekView}
+               </button>
+             )}
+          </div>
+          
+          {dailySlots.length === 0 ? (
+            <div className="text-center py-12 text-stone-500 bg-stone-50 border border-dashed border-stone-200">
+              <Clock className="mx-auto mb-2 text-stone-400" />
+              <p>Closed on Sundays. Please select another date.</p>
+            </div>
+          ) : !isAllowedDate && !isAdmin ? (
+             <div className="text-center py-12 text-red-500 bg-red-50 border border-dashed border-red-200">
+               <Calendar className="mx-auto mb-2 opacity-50" />
+               <p>Booking not yet open for this date.</p>
+             </div>
+          ) : (
+            <div className="space-y-4">
+              {dailySlots.map((slot) => {
+                const { isBlocked, remaining, bookings } = getSlotData(selectedDate, slot);
+                const now = new Date();
+                const isToday = selectedDate === formatDate(now);
+                const [h, m] = slot.split(':').map(Number);
+                const slotDate = new Date();
+                slotDate.setHours(h, m, 0, 0);
+                const isPastTime = isToday && slotDate < now;
+                const isFull = remaining === 0;
+                
+                return (
+                  <div key={slot} className="bg-white border border-stone-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-colors">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-1">
+                        <Clock size={18} className="text-emerald-700" />
+                        <span className="text-xl font-serif font-bold text-stone-800">{slot}</span>
+                      </div>
+                      <div className="flex gap-2 text-xs font-bold uppercase tracking-wider">
+                        {isBlocked ? (
+                          <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.blocked}</span>
+                        ) : isPastTime ? (
+                          <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.past}</span>
+                        ) : isFull ? (
+                          <span className="text-red-500 bg-red-50 px-2 py-0.5 rounded">{t.full}</span>
+                        ) : (
+                          <span className="text-emerald-600 px-2 py-0.5 rounded"></span>
+                        )}
+                      </div>
+                    </div>
+
+                    {!isAdmin ? (
+                      <button
+                        onClick={() => handleBookClick(slot)}
+                        disabled={isFull || isBlocked || isPastTime}
+                        className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-all min-w-[140px] ${
+                          isFull || isBlocked || isPastTime
+                            ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                            : 'bg-emerald-800 text-white hover:bg-emerald-900 shadow-sm'
+                        }`}
+                      >
+                        {isBlocked || isFull || isPastTime ? 'Unavailable' : 'Select'}
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        <button onClick={() => toggleBlockSlot(selectedDate, slot, isBlocked)} className="text-xs bg-stone-200 hover:bg-stone-300 px-3 py-2 font-bold uppercase">{isBlocked ? t.unblock : 'Block'}</button>
+                      </div>
+                    )}
+                    
+                    {isAdmin && bookings.length > 0 && (
+                      <div className="w-full sm:w-auto mt-2 sm:mt-0 pt-2 sm:pt-0 sm:border-l sm:border-stone-100 sm:pl-4">
+                        {bookings.map(b => (
+                          <div key={b.id} className="text-xs mb-1 flex items-center justify-between gap-2 bg-stone-50 p-1.5 rounded">
+                            <div className="overflow-hidden">
+                              <div className="font-bold truncate">{b.name}</div>
+                              <div className="text-stone-500">{b.phone}</div>
+                            </div>
+                            <div className="flex gap-1">
+                              <a href={`tel:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Call"><Phone size={12}/></a>
+                              <a href={`sms:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Text"><MessageCircle size={12}/></a>
+                              <button onClick={() => handleDeleteBooking(b.id)} className="p-1 bg-white border hover:bg-red-50 text-red-600" title="Delete"><Trash2 size={12}/></button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderAppointments = () => (
+    <div className="animate-in fade-in duration-500 min-h-screen">
+      <div className="bg-emerald-900 text-white py-16 px-6 text-center">
+        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t.bookingTitle}</h2>
+        <p className="text-emerald-100 max-w-2xl mx-auto">{t.bookingSubtitle}</p>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        {isAdmin && viewMode === 'week' ? (
+           <>
+             <div className="mb-6 flex justify-end">
+               <button 
+                 onClick={() => setViewMode('day')} 
+                 className="flex items-center gap-1 text-xs bg-stone-100 hover:bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold transition-colors"
+               >
+                 <List size={14}/> {t.dayView}
+               </button>
+             </div>
+             {renderWeekView()}
+           </>
+        ) : renderDailyView()}
+      </div>
+    </div>
+  );
 
   const renderServices = () => (
     <div className="animate-in fade-in duration-500 py-16 px-6">
@@ -661,7 +826,7 @@ export default function App() {
         {t.servicesPage.list.map((s, i) => (
           <div key={i} className="flex flex-col md:flex-row gap-6 items-start bg-white p-6 border-b border-stone-100 last:border-0">
              <div className="w-16 h-16 bg-emerald-50 flex items-center justify-center text-emerald-800 shrink-0 rounded-sm">
-                {getServiceIcon(i)}
+                <Leaf size={32} />
              </div>
              <div>
                <h3 className="text-xl font-serif font-bold text-emerald-900 mb-2">{s.title}</h3>
@@ -702,6 +867,35 @@ export default function App() {
     </div>
   );
 
+  const renderHome = () => (
+    <div className="animate-in fade-in duration-500">
+      <div className="relative bg-stone-100 h-[500px] flex items-center justify-center overflow-hidden">
+         <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/90 to-emerald-800/80"></div>
+         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white">
+           <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight tracking-wide">
+             {t.heroTitle}
+           </h1>
+           <p className="text-emerald-50 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+             {t.heroSubtitle}
+           </p>
+           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+             <button onClick={() => setCurrentPage('appointments')} className="bg-white text-emerald-900 px-8 py-4 rounded-sm font-semibold tracking-widest hover:bg-emerald-50 transition-all uppercase text-sm">
+               {t.bookNow}
+             </button>
+             <button onClick={() => setCurrentPage('about')} className="border border-white text-white px-8 py-4 rounded-sm font-semibold tracking-widest hover:bg-white/10 transition-all uppercase text-sm">
+               {t.learnMore}
+             </button>
+           </div>
+         </div>
+      </div>
+      <div className="max-w-4xl mx-auto px-6 py-20 text-center">
+        <h2 className="text-3xl font-serif font-bold text-emerald-900 mb-6">{t.welcomeTitle}</h2>
+        <div className="h-0.5 w-20 bg-emerald-600 mx-auto mb-8"></div>
+        <p className="text-stone-600 text-lg leading-loose">{t.welcomeText}</p>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-white text-stone-800 font-sans selection:bg-emerald-100 selection:text-emerald-900 flex flex-col">
       <div className="bg-emerald-900 text-emerald-100 text-xs py-2 px-4">
@@ -715,6 +909,9 @@ export default function App() {
              <button onClick={() => setLang(l => l === 'en' ? 'zh' : 'en')} className="hover:text-white transition-colors">
                {lang === 'en' ? '中文' : 'English'}
              </button>
+             {isAdmin && (
+               <button onClick={() => setIsSettingsOpen(true)} className="hover:text-white transition-colors"><Settings size={14}/></button>
+             )}
              {!isAdmin ? (
                <button onClick={() => setIsAdminLoginOpen(true)} className="hover:text-white transition-colors">{t.login}</button>
              ) : (
@@ -790,7 +987,7 @@ export default function App() {
              <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
                {t.testimonialsPage.list.map((item, i) => (
                  <div key={i} className="bg-stone-50 p-8 border border-stone-100">
-                   <div className="text-emerald-800 mb-4 flex"><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/></div>
+                   <div className="text-emerald-800 mb-4 flex"><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/></div>
                    <p className="text-stone-700 italic mb-4 font-serif text-lg">"{item.text}"</p>
                    <div className="font-bold text-emerald-900 uppercase tracking-wide text-sm">- {item.name}</div>
                  </div>
@@ -822,21 +1019,29 @@ export default function App() {
         </div>
       </footer>
 
+      {/* Booking Modal */}
       <Modal isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)} title={`${t.bookSlot}: ${selectedSlot}`}>
         <form onSubmit={submitBooking} className="space-y-5">
           <div className="p-4 bg-stone-50 text-stone-600 text-sm border-l-4 border-emerald-600">
              <p>{t.enterDetails}</p>
+             <p className="mt-1 font-bold text-red-500 text-xs">{t.requiredFields}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-emerald-900 uppercase tracking-widest mb-2">{t.firstName} *</label>
+              <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none transition-colors" placeholder={lang === 'en' ? "Jane" : "大文"} />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-emerald-900 uppercase tracking-widest mb-2">{t.lastName} *</label>
+              <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none transition-colors" placeholder={lang === 'en' ? "Doe" : "陳"} />
+            </div>
           </div>
           <div>
-            <label className="block text-xs font-bold text-emerald-900 uppercase tracking-widest mb-2">{t.name}</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none transition-colors" placeholder={lang === 'en' ? "Jane Doe" : "陳大文"} />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-emerald-900 uppercase tracking-widest mb-2">{t.phone}</label>
+            <label className="block text-xs font-bold text-emerald-900 uppercase tracking-widest mb-2">{t.phone} *</label>
             <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none transition-colors" placeholder="555-123-4567" />
           </div>
           <div>
-            <label className="block text-xs font-bold text-emerald-900 uppercase tracking-widest mb-2">{t.email}</label>
+            <label className="block text-xs font-bold text-emerald-900 uppercase tracking-widest mb-2">{t.email} *</label>
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none transition-colors" placeholder="jane@example.com" />
           </div>
           {formError && <div className="text-red-600 text-sm font-medium bg-red-50 p-3 flex items-center gap-2"><XCircle size={16}/> {formError}</div>}
@@ -846,6 +1051,7 @@ export default function App() {
         </form>
       </Modal>
 
+      {/* Cancel Modal */}
       <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)} title={t.findBooking}>
         <div className="space-y-5">
           <p className="text-sm text-stone-500">{t.enterPhoneToFind}</p>
@@ -872,6 +1078,7 @@ export default function App() {
         </div>
       </Modal>
 
+      {/* Admin Login Modal */}
       <Modal isOpen={isAdminLoginOpen} onClose={() => { setIsAdminLoginOpen(false); setFormError(''); }} title={t.adminMode}>
         <form onSubmit={handleAdminLogin} className="space-y-5">
           <div className="text-center mb-4">
@@ -881,6 +1088,23 @@ export default function App() {
           <input type="password" value={adminPass} onChange={(e) => setAdminPass(e.target.value)} className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none text-center tracking-widest" placeholder="• • • •" autoFocus />
           {formError && <div className="text-red-600 text-sm font-medium text-center">{formError}</div>}
           <button type="submit" className="w-full py-3 bg-stone-800 text-white font-bold uppercase tracking-widest hover:bg-stone-900 transition-colors">{t.login}</button>
+        </form>
+      </Modal>
+
+      {/* Admin Settings Modal */}
+      <Modal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} title={t.settings}>
+        <form onSubmit={saveSettings} className="space-y-5">
+          <div>
+            <label className="block text-xs font-bold text-emerald-900 uppercase tracking-widest mb-2">{t.maxDateLabel}</label>
+            <input 
+              type="date" 
+              value={settings.maxBookingDate || ''} 
+              onChange={(e) => setSettings({...settings, maxBookingDate: e.target.value})} 
+              className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none" 
+            />
+            <p className="text-xs text-stone-500 mt-2">Patients cannot book appointments after this date.</p>
+          </div>
+          <button type="submit" className="w-full py-3 bg-emerald-900 text-white font-bold uppercase tracking-widest hover:bg-emerald-800 transition-colors shadow-lg">{t.save}</button>
         </form>
       </Modal>
 
