@@ -40,7 +40,7 @@ import {
   Grid,
   List,
   Ban,
-  Mail // Added Mail icon
+  Mail 
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -120,6 +120,7 @@ const TRANSLATIONS = {
     startTime: "Start Time",
     endTime: "End Time",
     blockConfirm: "Block Selected Range",
+    apptDetails: "Appointment Details",
     servicesPage: {
       title: "Our Specialties",
       subtitle: "Comprehensive care for your well-being",
@@ -202,6 +203,7 @@ const TRANSLATIONS = {
     startTime: "開始時間",
     endTime: "結束時間",
     blockConfirm: "封鎖選定範圍",
+    apptDetails: "預約詳情",
     servicesPage: {
       title: "專業服務",
       subtitle: "為您量身定制的整體療法",
@@ -247,6 +249,7 @@ const formatDate = (date) => {
   return `${year}-${month}-${day}`;
 };
 
+// Generate 15-minute intervals for the day
 const getDailySlots = (dateStr) => {
   const date = parseLocal(dateStr);
   const day = date.getDay(); // 0 = Sun, 6 = Sat
@@ -323,7 +326,9 @@ export default function App() {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isBlockRangeOpen, setIsBlockRangeOpen] = useState(false); 
-  
+  // New state for viewing specific booking details in week view
+  const [selectedBookingDetails, setSelectedBookingDetails] = useState(null);
+
   const [selectedSlot, setSelectedSlot] = useState(null);
   
   const [firstName, setFirstName] = useState('');
@@ -643,7 +648,13 @@ export default function App() {
                     className={`border-r p-1 transition-colors cursor-pointer flex items-center justify-center
                       ${isBlocked ? 'bg-stone-200' : isBooked ? 'bg-emerald-100' : 'hover:bg-emerald-50'}
                     `}
-                    onClick={() => !isBooked && toggleBlockSlot(dateStr, time, isBlocked)}
+                    onClick={() => {
+                      if (isBooked) {
+                        setSelectedBookingDetails(bookings[0]);
+                      } else {
+                        toggleBlockSlot(dateStr, time, isBlocked);
+                      }
+                    }}
                     title={isBooked ? `${bookings[0].name}\n${bookings[0].phone}\n${bookings[0].email}` : isBlocked ? 'Blocked' : 'Available'}
                   >
                     {isBlocked && <X size={12} className="text-stone-400"/>}
@@ -1216,6 +1227,43 @@ export default function App() {
 
           <button type="submit" className="w-full py-3 bg-red-700 text-white font-bold uppercase tracking-widest hover:bg-red-800 transition-colors shadow-lg">{t.blockConfirm}</button>
         </form>
+      </Modal>
+
+      {/* Booking Details Modal (Week View) */}
+      <Modal 
+        isOpen={!!selectedBookingDetails} 
+        onClose={() => setSelectedBookingDetails(null)} 
+        title={t.apptDetails}
+      >
+        {selectedBookingDetails && (
+          <div className="space-y-4">
+             <div className="bg-emerald-50 p-3 rounded border border-emerald-100">
+               <p className="font-bold text-emerald-900 text-lg">{selectedBookingDetails.name}</p>
+               <p className="text-sm text-stone-600">{selectedBookingDetails.date} at {selectedBookingDetails.hour}</p>
+             </div>
+             <div className="space-y-2">
+               <div className="flex items-center gap-3 text-stone-600">
+                 <Phone size={16} />
+                 <a href={`tel:${selectedBookingDetails.phone}`} className="hover:text-emerald-800 underline">{selectedBookingDetails.phone}</a>
+               </div>
+               <div className="flex items-center gap-3 text-stone-600">
+                 <Mail size={16} />
+                 <a href={`mailto:${selectedBookingDetails.email}`} className="hover:text-emerald-800 underline">{selectedBookingDetails.email}</a>
+               </div>
+             </div>
+             <div className="pt-4 border-t border-stone-100 flex justify-end">
+                <button 
+                  onClick={() => {
+                    handleDeleteBooking(selectedBookingDetails.id, t.confirmCancel);
+                    setSelectedBookingDetails(null);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 hover:bg-red-100 rounded text-sm font-bold"
+                >
+                  <Trash2 size={16}/> Cancel Appointment
+                </button>
+             </div>
+          </div>
+        )}
       </Modal>
 
     </div>
