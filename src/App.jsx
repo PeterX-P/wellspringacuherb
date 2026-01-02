@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { 
@@ -15,7 +16,7 @@ import {
   setDoc,
   getDoc,
   serverTimestamp,
-  writeBatch // Added for batch operations
+  writeBatch
 } from 'firebase/firestore';
 import { 
   Calendar, 
@@ -39,11 +40,12 @@ import {
   Settings,
   Grid,
   List,
-  Ban // Added for Block icon
+  Ban
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
 // IMPORTANT: Replace these values with your actual Firebase project keys
+// Go to Firebase Console -> Project Settings -> General -> Your Apps
 const firebaseConfig = {
   apiKey: "AIzaSyDJosQQhRGcebaxJQ37gNTnqXawsYHO9oI",
   authDomain: "harmony-acupuncture.firebaseapp.com",
@@ -397,7 +399,7 @@ export default function App() {
   };
 
   const isDateAllowed = (dateStr) => {
-    // Dynamic window calculation
+    if (!settings.bookingWindowDays) return true; // No limit if not set
     const windowDays = parseInt(settings.bookingWindowDays || 60);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -1195,7 +1197,11 @@ export default function App() {
                 onChange={(e) => setBlockStartTime(e.target.value)}
                 className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none"
               >
-                {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
+                {/* Dynamically get slots for current date to populate dropdown */}
+                {getDailySlots(selectedDate).length > 0 
+                  ? getDailySlots(selectedDate).map(t => <option key={t} value={t}>{t}</option>)
+                  : <option disabled>No slots</option>
+                }
               </select>
             </div>
             <div>
@@ -1205,7 +1211,10 @@ export default function App() {
                 onChange={(e) => setBlockEndTime(e.target.value)}
                 className="w-full px-4 py-3 bg-stone-50 border border-stone-200 focus:border-emerald-500 outline-none"
               >
-                {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
+                {getDailySlots(selectedDate).length > 0 
+                  ? getDailySlots(selectedDate).map(t => <option key={t} value={t}>{t}</option>)
+                  : <option disabled>No slots</option>
+                }
               </select>
             </div>
           </div>
