@@ -55,7 +55,6 @@ const firebaseConfig = {
   appId: "1:78608558880:web:adbb1fe3596d2b88c58545"
 };
 
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -256,15 +255,15 @@ const getDailySlots = (dateStr) => {
   
   if (day === 0) return []; // Sunday closed
 
-  // M-F (1-5): 9am to 5pm
-  // Sat (6): 9am to 4pm
+  // M-F (1-5): 9am to 4pm
+  // Sat (6): 9am to 3pm
   let startHour = 9;
   let endHour = day === 6 ? 15 : 16; 
 
   const slots = [];
   for (let h = startHour; h <= endHour; h++) {
     for (let m = 0; m < 60; m += 15) {
-      if (h === endHour && m > 0 && day === 6) break;
+      if (h === endHour && m > 0) break; // End exactly at the hour
       slots.push(`${h}:${m === 0 ? '00' : m}`);
     }
   }
@@ -598,6 +597,8 @@ export default function App() {
     const allSlots = [];
     for (let h = 9; h <= 16; h++) {
         for (let m = 0; m < 60; m += 15) {
+            // Cap at 16:00 to keep grid clean
+            if (h === 16 && m > 0) break;
             allSlots.push(`${h}:${m === 0 ? '00' : m}`);
         }
     }
@@ -634,9 +635,15 @@ export default function App() {
               {dates.map(dateStr => {
                 const day = parseLocal(dateStr).getDay();
                 if (day === 0) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
+                
                 const [h, m] = time.split(':').map(Number);
-                if (day === 6 && (h > 15 || (h === 15 && m > 45))) {
-                   return <div key={dateStr} className="bg-stone-100 border-r"></div>;
+                // M-F ends at 16:00
+                if (day >= 1 && day <= 5) {
+                    if (h > 16 || (h === 16 && m > 0)) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
+                }
+                // Sat ends at 15:00
+                if (day === 6) {
+                    if (h > 15 || (h === 15 && m > 0)) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
                 }
 
                 const { isBlocked, bookings } = getSlotData(dateStr, time);
@@ -1082,8 +1089,8 @@ export default function App() {
            </div>
            <div>
              <h4 className="text-white font-bold uppercase tracking-widest mb-4">Hours</h4>
-             <p>Mon - Fri: 9:00 AM - 5:00 PM</p>
-             <p>Sat: 9:00 AM - 4:00 PM</p>
+             <p>Mon - Fri: 9:00 AM - 4:00 PM</p>
+             <p>Sat: 9:00 AM - 3:00 PM</p>
              <p>Sun: Closed</p>
            </div>
         </div>
@@ -1239,7 +1246,8 @@ export default function App() {
         {selectedBookingDetails && (
           <div className="space-y-4">
              <div className="bg-emerald-50 p-3 rounded border border-emerald-100">
-               <p className="font-bold text-emerald-900 text-lg">{selectedBookingDetails.name}</p>
+               {/* Handles both new 'firstName' and legacy 'name' formats */}
+               <p className="font-bold text-emerald-900 text-lg">{selectedBookingDetails.firstName ? `${selectedBookingDetails.firstName} ${selectedBookingDetails.lastName}` : selectedBookingDetails.name}</p>
                <p className="text-sm text-stone-600">{selectedBookingDetails.date} at {selectedBookingDetails.hour}</p>
              </div>
              <div className="space-y-2">
