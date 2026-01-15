@@ -40,7 +40,8 @@ import {
   Grid,
   List,
   Ban,
-  Mail
+  Mail,
+  HelpingHand // Added for Tuina
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -70,15 +71,15 @@ const TRANSLATIONS = {
       about: "About",
       testimonials: "Testimonials"
     },
-    title: "Wellspring Acupuncture",
+    title: "Wellspring Acupuncture and Herbs",
     subtitle: "Integrative Medicine & Wellness",
-    login: "Staff All Login",
+    login: "Staff Login",
     logout: "Logout",
     heroTitle: "Restore Your Vitality",
     heroSubtitle: "Experience the profound benefits of traditional acupuncture in a modern, serene setting.",
     bookNow: "Book an Appointment",
     learnMore: "Learn More",
-    welcomeTitle: "Welcome to Wellspring",
+    welcomeTitle: "Welcome to Wellspring Acupuncture and Herbs",
     welcomeText: "We are dedicated to providing personalized care that addresses the root cause of your health concerns. Our clinic offers a sanctuary for healing, combining ancient wisdom with modern medical understanding.",
     bookingTitle: "Schedule Your Visit",
     bookingSubtitle: "Select a time that works for you. Private treatment sessions available every 15 minutes.",
@@ -106,7 +107,7 @@ const TRANSLATIONS = {
     cancelAppt: "Cancel",
     confirmCancel: "Cancel this appointment?",
     past: "Past",
-    footer: "© 2025 Wellspring Acupuncture. All rights reserved.",
+    footer: "© 2025 Wellspring Acupuncture and Herbs. All rights reserved.",
     settings: "Settings",
     daysAheadLabel: "Booking Window (Weeks)",
     daysAheadDesc: "How many weeks ahead can patients book?",
@@ -127,12 +128,12 @@ const TRANSLATIONS = {
         { title: "Acupuncture", desc: "Stimulate your body's natural healing abilities to reduce pain and inflammation." },
         { title: "Cupping", desc: "Improve blood flow and relaxation with traditional vacuum therapy." },
         { title: "Herbal Medicine", desc: "Custom herbal formulas tailored to your specific constitution." },
-        { title: "Fertility Support", desc: "Specialized treatments to support reproductive health and wellness." }
+        { title: "Tuina (Chinese Therapeutic Massage)", desc: "Restore balance through hands-on techniques that relax muscles, improve circulation, and support the body’s natural healing process." }
       ]
     },
     aboutPage: {
       title: "Our Philosophy",
-      p1: "Founded on the principles of compassion and integrity, Wellspring Acupuncture has served the community for over 15 years.",
+      p1: "Founded on the principles of compassion and integrity, Wellspring Acupuncture and Herbs has served the community for over 15 years.",
       p2: "Our practitioners are licensed and board-certified, bringing decades of combined experience to your treatment plan.",
       stats: ["15+ Years", "5k+ Patients", "Licensed Pros"]
     },
@@ -153,15 +154,15 @@ const TRANSLATIONS = {
       about: "關於我們",
       testimonials: "見證"
     },
-    title: "源泉針灸中心",
+    title: "活泉中医针灸诊所",
     subtitle: "中西醫結合 • 全人健康",
-    login: "員工全然登入",
+    login: "員工登入",
     logout: "登出",
     heroTitle: "調理身心，恢復平衡",
     heroSubtitle: "在現代舒適的環境中，體驗傳統針灸的深層療效。",
     bookNow: "立即預約",
     learnMore: "了解更多",
-    welcomeTitle: "歡迎來到源泉",
+    welcomeTitle: "歡迎來到活泉中医针灸诊所",
     welcomeText: "我們致力於提供個性化的護理，解決您健康問題的根源。",
     bookingTitle: "預約您的診療",
     bookingSubtitle: "選擇適合您的時間。每15分鐘提供一個私人治療時段。",
@@ -189,7 +190,7 @@ const TRANSLATIONS = {
     cancelAppt: "取消",
     confirmCancel: "確定要取消此預約嗎？",
     past: "已過",
-    footer: "© 2025 源泉針灸中心 版權所有",
+    footer: "© 2025 活泉中医针灸诊所 版權所有",
     settings: "設置",
     daysAheadLabel: "開放預約週數",
     daysAheadDesc: "允許患者提前多少週預約？",
@@ -210,12 +211,12 @@ const TRANSLATIONS = {
         { title: "傳統針灸", desc: "激發身體的自然癒合能力，減少疼痛和炎症。" },
         { title: "拔罐療法", desc: "利用真空療法促進血液循環和肌肉放鬆。" },
         { title: "中藥調理", desc: "根據您的體質定制的草本配方。" },
-        { title: "助孕調理", desc: "支持生殖健康和福祉的專業治療。" }
+        { title: "中医推拿疗法", desc: "通过手法操作放松肌肉、促进血液循环，帮助恢复身体平衡，支持身体的自然修复过程。" }
       ]
     },
     aboutPage: {
       title: "我們的理念",
-      p1: "源泉針灸中心建立在同情和誠信的原則之上，服務社區已超過15年。",
+      p1: "活泉中医针灸诊所建立在同情和誠信的原則之上，服務社區已超過15年。",
       p2: "我們的醫師均持有執照和委員會認證，為您的治療計劃帶來數十年的綜合經驗。",
       stats: ["15年+ 經驗", "5000+ 患者", "認證專家"]
     },
@@ -446,7 +447,7 @@ export default function App() {
         to: [email, 'wellspringacuherb@gmail.com'],
         message: {
           subject: `Appointment Confirmation: ${fullName} on ${selectedDate}`,
-          text: `Dear ${firstName},\n\nYour appointment has been confirmed.\n\nDate: ${selectedDate}\nTime: ${selectedSlot}\nLocation: 655 Concord Street, Framingham 01702\nPhone: 508-628-1888\n\nTo cancel or reschedule, please visit our website.\n\nThank you,\nWellspring Acupuncture`,
+          text: `Dear ${firstName},\n\nYour appointment has been confirmed.\n\nDate: ${selectedDate}\nTime: ${selectedSlot}\nLocation: 655 Concord Street, Framingham 01702\nPhone: 508-628-1888\n\nTo cancel or reschedule, please visit our website.\n\nThank you,\nWellspring Acupuncture and Herbs`,
           html: `
             <div style="font-family: sans-serif; padding: 20px; color: #333;">
               <h2 style="color: #064e3b;">Appointment Confirmed</h2>
@@ -460,7 +461,7 @@ export default function App() {
               <p><strong>Location:</strong><br/>655 Concord Street, Framingham 01702</p>
               <p><strong>Phone:</strong> 508-628-1888</p>
               <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #666;">Wellspring Acupuncture</p>
+              <p style="font-size: 12px; color: #666;">Wellspring Acupuncture and Herbs</p>
             </div>
           `
         }
@@ -597,7 +598,6 @@ export default function App() {
     const allSlots = [];
     for (let h = 9; h <= 16; h++) {
         for (let m = 0; m < 60; m += 15) {
-            // Cap at 16:00 to keep grid clean
             if (h === 16 && m > 0) break;
             allSlots.push(`${h}:${m === 0 ? '00' : m}`);
         }
@@ -687,6 +687,7 @@ export default function App() {
 
     return (
       <div className="flex flex-col md:flex-row gap-12">
+        {/* Calendar Sidebar */}
         <div className="md:w-1/3">
           <div className="bg-white p-6 shadow-lg border border-stone-100 sticky top-24">
             <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-stone-100 pb-2">
@@ -724,6 +725,9 @@ export default function App() {
                     const isPast = date < new Date(new Date().setHours(0,0,0,0));
                     
                     const isAllowed = isDateAllowed(dateStr); 
+
+                    // Check for appointments on this day (for highlighting)
+                    const hasAppointments = appointments.some(a => a.date === dateStr && a.type === 'booking');
                     
                     slots.push(
                       <button
@@ -731,7 +735,9 @@ export default function App() {
                         onClick={() => !isPast && isAllowed && setSelectedDate(dateStr)}
                         disabled={isPast || !isAllowed}
                         className={`h-9 w-9 mx-auto rounded-full flex items-center justify-center text-sm transition-all ${
-                          isSelected ? 'bg-emerald-800 text-white font-bold' : 'hover:bg-emerald-50 text-stone-600'
+                          isSelected ? 'bg-emerald-800 text-white font-bold' : 
+                          hasAppointments ? 'font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 ring-1 ring-emerald-200' : 
+                          'hover:bg-emerald-50 text-stone-600'
                         } ${isPast || !isAllowed ? 'text-stone-300 cursor-not-allowed opacity-50 hover:bg-transparent' : ''}`}
                       >
                         {i}
@@ -796,6 +802,11 @@ export default function App() {
                 slotDate.setHours(h, m, 0, 0);
                 const isPastTime = isToday && slotDate < now;
                 const isFull = remaining === 0;
+
+                // Hide unavailable slots for patients (booked, blocked, or past)
+                if (!isAdmin && (isBlocked || isFull || isPastTime)) {
+                  return null;
+                }
                 
                 return (
                   <div key={slot} className="bg-white border border-stone-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-colors">
@@ -903,7 +914,7 @@ export default function App() {
         {t.servicesPage.list.map((s, i) => (
           <div key={i} className="flex flex-col md:flex-row gap-6 items-start bg-white p-6 border-b border-stone-100 last:border-0">
              <div className="w-16 h-16 bg-emerald-50 flex items-center justify-center text-emerald-800 shrink-0 rounded-sm">
-                {getServiceIcon(i)}
+                {s.title.includes('Tuina') ? <HelpingHand size={32} /> : getServiceIcon(i)}
              </div>
              <div>
                <h3 className="text-xl font-serif font-bold text-emerald-900 mb-2">{s.title}</h3>
@@ -1089,8 +1100,8 @@ export default function App() {
            </div>
            <div>
              <h4 className="text-white font-bold uppercase tracking-widest mb-4">Hours</h4>
-             <p>Mon - Fri: 9:00 AM - 4:00 PM</p>
-             <p>Sat: 9:00 AM - 3:00 PM</p>
+             <p>Mon - Fri: 9:00 AM - 5:00 PM</p>
+             <p>Sat: 9:00 AM - 4:00 PM</p>
              <p>Sun: Closed</p>
            </div>
         </div>
