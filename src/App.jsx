@@ -41,7 +41,8 @@ import {
   List,
   Ban,
   Mail,
-  HelpingHand // Added for Tuina
+  HelpingHand,
+  CheckCircle2 
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -68,6 +69,7 @@ const TRANSLATIONS = {
       home: "Home",
       appointments: "Appointments",
       services: "Services",
+      whatWeTreat: "What We Treat",
       about: "About",
       testimonials: "Testimonials"
     },
@@ -131,10 +133,31 @@ const TRANSLATIONS = {
         { title: "Tuina (Chinese Therapeutic Massage)", desc: "Restore balance through hands-on techniques that relax muscles, improve circulation, and support the body’s natural healing process." }
       ]
     },
+    whatWeTreatPage: {
+      title: "What We Treat",
+      subtitle: "Holistic solutions for a wide range of conditions",
+      list: [
+        "Women’s health and reproductive concerns, including infertility support, menstrual irregularities, dysmenorrhea, polycystic ovary syndrome (PCOS), and menopausal symptoms etc.",
+        "Stress-related conditions, including anxiety, depression, and sleep disturbance etc.",
+        "Pelvic floor and urinary dysfunction, including postnatal or post-surgical incontinence, neurogenic bladder, urgency-frequency syndrome, and sexual dysfunction etc.",
+        "Neurological conditions, including migraine, neuropathic pain, facial paralysis, and post-herpetic pain etc.",
+        "Musculoskeletal pain, including neck, shoulder, lower back, and knee pain etc.",
+        "Metabolic and endocrine conditions, including obesity, thyroid dysfunction, metabolic syndrome, hypertension, diabetes, and hyperlipidemia etc.",
+        "Digestive disorders, including indigestion, irritable bowel syndrome, inflammatory bowel disease etc.",
+        "Eye, ear, and nasal conditions, including allergies, sinus, ear ringing, dry eyes, youth pseudomyopia, glaucoma etc.",
+        "Dermatological conditions, including acne, eczema, herpes zoster, hives, sebaceous cyst, folliculitis etc..",
+        "Cosmetic acupuncture for facial rejuvenation and skin health, weight loss etc.."
+      ]
+    },
     aboutPage: {
-      title: "Our Philosophy",
-      p1: "Founded on the principles of compassion and integrity, Wellspring Acupuncture and Herbs has served the community for over 15 years.",
-      p2: "Our practitioners are licensed and board-certified, bringing decades of combined experience to your treatment plan.",
+      title: "Ruthy (Xiaoming) Feng, PhD, Lic.Ac, Lic.Herb",
+      p1: "Ruthy (Xiaoming) Feng, is a Massachusetts-licensed Acupuncturist and Herbalist in the United States. She also serves as an attending physician and assistant professor of Traditional Chinese Medicine in Shanghai, China, with extensive experience in both clinical practice and research.",
+      p2: "Dr. Feng entered Shandong University of Traditional Chinese Medicine’s first seven-year combined bachelor’s and master’s program. Her master tutor was Professor Yuanqing Ding, a nationally recognized master of Chinese medicine and a leading scholar of Shang Han Lun. She received her Bachelor’s Degree in Traditional Chinese Medicine and her Master’s Degree in Neurology in 2007. Her formal training focused on internal medicine, with an emphasis on treating complex neurological conditions through Chinese medicine.",
+      p3: "Through years of clinical training, she witnessed firsthand the effectiveness of Chinese medicine in conditions such as stroke, facial paralysis, neurodegenerative disorders, autoimmune neurological diseases, and chronic neuropathic pain. These experiences transformed her initial interest into a lifelong commitment.",
+      p4: "She later received rigorous training in biomedical research at Fudan University in Integrative Chinese and Western Medicine. Although this period strengthened her scientific foundation, her heart remained in clinical practice. After graduation, she joined the Shanghai Institute of Acupuncture and Meridians, one of the leading acupuncture research and clinical institutions in China, where she continued both research and clinical practice.",
+      p5: "During this time, she studied with several highly respected masters in acupuncture. She trained with Professor Jinsen He, China’s first doctoral graduate in Acupuncture, focusing on acupuncture treatment for thyroid disorders, eye diseases, and endocrine conditions. Under Professor Mingzhu Ye’s guidance, a renowned scholar of acupuncture classics, she learned comprehensive approaches to complex internal and surgical conditions—often exploring multiple treatment strategies for a single diagnosis. She also trained with Professor Siyou Wang, a leading authority in urology, where she developed a systematic approach to treating pelvic floor disorders and gained a deeper understanding of clinically grounded research.",
+      p6: "Through experiences with Dr Mingguang Xu, a second-generation lineage holder of Yang-style acupuncuture, she became a third-generation lineage holder of Yang-style acupuncture. She also received advanced mentorship through multiple international and domestic academic transmission programs, including training with Professor Guanyuan Jin in clinical acupuncture reflexology; specialized training in reproductive health and infertility with Dr Dongyun Yang,an international renowned infertility expert.",
+      p7: "Medicine is a lifelong path of learning and humility. Since 2021 she has been practicing acupuncture and herbal medicine, providing patient-centered, diagnosis-informed care within the U.S. healthcare setting. Dr. Feng is committed to delivering safe, thoughtful, and integrative acupuncture care, with an emphasis on functional improvement, long-term regulation, and collaboration with other healthcare providers when appropriate. She believes that Chinese medicine, at its best, restores balance not only to the body, but also to the person as a whole, offering a renewed sense of stability, dignity, and hope.",
       stats: ["15+ Years", "5k+ Patients", "Licensed Pros"]
     },
     testimonialsPage: {
@@ -151,6 +174,7 @@ const TRANSLATIONS = {
       home: "首頁",
       appointments: "線上預約",
       services: "服務項目",
+      whatWeTreat: "治疗范围",
       about: "關於我們",
       testimonials: "見證"
     },
@@ -214,11 +238,32 @@ const TRANSLATIONS = {
         { title: "中医推拿疗法", desc: "通过手法操作放松肌肉、促进血液循环，帮助恢复身体平衡，支持身体的自然修复过程。" }
       ]
     },
+    whatWeTreatPage: {
+      title: "治疗范围",
+      subtitle: "针对多种疾病的整体治疗方案",
+      list: [
+        "女性健康与生殖相关问题，包括不孕症支持、月经不调、痛经、多囊卵巢综合征（PCOS）及更年期综合征等",
+        "压力相关问题，包括焦虑、抑郁及睡眠障碍等",
+        "盆底及泌尿功能障碍，包括产后或术后尿失禁、神经源性膀胱、尿频尿急综合征及性功能障碍等",
+        "神经系统相关疾病，包括偏头痛、神经性疼痛、面瘫及带状疱疹后神经痛",
+        "肌肉骨骼疼痛，包括颈部、肩部、腰部及膝关节疼痛",
+        "代谢与内分泌相关问题，包括肥胖、甲状腺功能异常、代谢综合征（高血压、糖尿病及高血脂）",
+        "消化系统疾病，包括消化不良，肠易激综合征、炎症性肠病等",
+        "眼、耳、鼻相关问题，包括过敏、鼻窦炎、耳鸣、干眼症、青光眼等",
+        "皮肤相关问题，包括痤疮、湿疹、带状疱疹、荨麻疹、皮下囊肿、皮脂腺炎等",
+        "美容针灸（面部年轻化及皮肤状态改善），针灸减肥"
+      ]
+    },
     aboutPage: {
-      title: "我們的理念",
-      p1: "活泉中医针灸诊所建立在同情和誠信的原則之上，服務社區已超過15年。",
-      p2: "我們的醫師均持有執照和委員會認證，為您的治療計劃帶來數十年的綜合經驗。",
-      stats: ["15年+ 經驗", "5000+ 患者", "認證專家"]
+      title: "丰晓溟 哲学博士（PhD）、执业针灸师（LAc）",
+      p1: "丰晓溟博士是美国马萨诸塞州注册执业针灸师及中药师，中国上海市针灸经络研究所的中医和针灸主治医师及上海中医药大学助理教授，兼具丰富的临床实践与科研经验。",
+      p2: "她于2000年进入山东中医药大学首届中医学本硕连读七年制就读，2007年获得中医学学士学位及中医内科学医学硕士学位；硕士期间师从全国名中医、《伤寒论》大家丁元庆教授，主修中医内科学，专注于中医治疗神经系统疑难疾病。",
+      p3: "在跟师学习的过程中，她系统研习了中医药在中风、面瘫、糖尿病神经系统并发症、运动神经元病、多发性硬化、视神经脊髓炎、三叉神经痛、重症肌无力等疾病中的临床应用。正是在那段时间，她亲眼见证了许多疑难病症在中医辨证施治下的转机，也逐渐让她从“对中医有兴趣”，走向“真正热爱中医”。",
+      p4: "此后，她考入复旦大学中西医结合系，转入基础研究领域。虽然科研训练让她获益良多，但对中医临床的思念始终未曾淡去。毕业后，她进入上海市针灸经络研究所，从事科研与临床工作，也再次回到了她所热爱的治疗一线。",
+      p5: "在针研所期间，她先后跟随多位名师学习：师从中国第一位针灸学博士何金森教授，系统掌握甲状腺疾病、眼病及内分泌疾病的针灸治疗；跟随针灸文献大家叶明柱教授，研习内外科各类杂病的针灸证治——叶老师知识渊博，同一疾病常能提出十余种治疗思路，令她深受启发；又师从泌尿科权威汪司右教授，系统掌握盆底疾病的针灸治疗方法，并由此刷新了她对中医临床科研路径的理解。",
+      p6: "随后因缘际会，师从杨氏针灸第二代传人徐明光医生，成为杨氏针灸第三代传人。同时，她也成为美国金观源教授学术传承堂的一员，并在第二届国际师承班跟随不孕症专家梁东云老师系统研习不孕症的针药证治。",
+      p7: "学无止境，道亦无涯。一路走来，她的临床视野与技术不断更新、沉淀与提升， 2021年起开始在美国医疗体系内执业，提供以病人为中心、基于诊断与评估的针灸与中药治疗服务。丰博士始终秉持安全、审慎与整合性的医疗理念，注重功能改善与长期调理，并在必要时与其他医疗专业人员协作，为患者提供规范、可靠的针灸医疗服务。愿所学之术，能成为真正的医治之器，为每一位前来求助的人，带去希望、安慰与福音。",
+      stats: ["15年+ 经验", "5000+ 患者", "认證專家"]
     },
     testimonialsPage: {
       title: "患者心聲",
@@ -353,6 +398,7 @@ export default function App() {
     return onAuthStateChanged(auth, setUser);
   }, []);
 
+  // Fetch Appointments
   useEffect(() => {
     if (!user) return;
     const q = collection(db, 'appointments');
@@ -363,6 +409,7 @@ export default function App() {
     return () => unsubscribe();
   }, [user]);
 
+  // Fetch Settings
   useEffect(() => {
     if (!user) return;
     const settingsDoc = doc(db, 'settings', 'config');
@@ -373,6 +420,8 @@ export default function App() {
     });
     return () => unsubscribe();
   }, [user]);
+
+  // --- Logic ---
 
   const saveSettings = async (e) => {
     e.preventDefault();
@@ -422,6 +471,7 @@ export default function App() {
 
   const submitBooking = async (e) => {
     e.preventDefault();
+    // Validate all fields
     if (!firstName.trim() || !lastName.trim() || !phone.trim() || !email.trim()) {
       setFormError(t.requiredFields);
       return;
@@ -430,6 +480,7 @@ export default function App() {
     const fullName = `${firstName.trim()} ${lastName.trim()}`;
 
     try {
+      // 1. Save to appointments collection
       await addDoc(collection(db, 'appointments'), {
         date: selectedDate,
         hour: selectedSlot,
@@ -443,11 +494,12 @@ export default function App() {
         createdAt: serverTimestamp()
       });
 
+      // 2. Trigger Email Notification (Requires "Trigger Email" Firebase Extension)
       await addDoc(collection(db, 'mail'), {
         to: [email, 'wellspringacuherb@gmail.com'],
         message: {
           subject: `Appointment Confirmation: ${fullName} on ${selectedDate}`,
-          text: `Dear ${firstName},\n\nYour appointment has been confirmed.\n\nDate: ${selectedDate}\nTime: ${selectedSlot}\nLocation: 655 Concord Street, Framingham 01702\nPhone: 508-628-1888\n\nTo cancel or reschedule, please visit our website.\n\nThank you,\nWellspring Acupuncture and Herbs`,
+          text: `Dear ${firstName},\n\nYour appointment has been confirmed.\n\nDate: ${selectedDate}\nTime: ${selectedSlot}\nLocation: 655 Concord Street, Framingham 01702\nPhone: 508-628-1888\n\nTo cancel or reschedule, please visit our website.\n\nThank you,\nWellspring Acupuncture`,
           html: `
             <div style="font-family: sans-serif; padding: 20px; color: #333;">
               <h2 style="color: #064e3b;">Appointment Confirmed</h2>
@@ -461,7 +513,7 @@ export default function App() {
               <p><strong>Location:</strong><br/>655 Concord Street, Framingham 01702</p>
               <p><strong>Phone:</strong> 508-628-1888</p>
               <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #666;">Wellspring Acupuncture and Herbs</p>
+              <p style="font-size: 12px; color: #666;">Wellspring Acupuncture</p>
             </div>
           `
         }
@@ -509,6 +561,7 @@ export default function App() {
     }
   };
 
+  // Batch Block Function
   const handleRangeBlockSubmit = async (e) => {
     e.preventDefault();
     if (!isAdmin) return;
@@ -523,10 +576,13 @@ export default function App() {
 
     try {
       const batch = writeBatch(db);
+      
       slotsToBlock.forEach(slot => {
+        // Check if already blocked or booked to avoid duplicates/errors
         const existing = appointments.find(
           app => app.date === selectedDate && app.hour === slot
         );
+        
         if (!existing) {
           const docRef = doc(collection(db, 'appointments'));
           batch.set(docRef, {
@@ -538,6 +594,7 @@ export default function App() {
           });
         }
       });
+
       await batch.commit();
       setIsBlockRangeOpen(false);
     } catch (err) {
@@ -584,9 +641,13 @@ export default function App() {
     setWeekStartDate(newDate);
   };
 
+  // --- Renderers ---
+
   const renderWeekView = () => {
+    // Generate dates for the week (Start from Sunday or Monday? Let's do Sunday for standard calendar view)
     const dates = [];
     const start = new Date(weekStartDate);
+    // Adjust to Sunday of the current week
     start.setDate(start.getDate() - start.getDay()); 
     
     for (let i = 0; i < 7; i++) {
@@ -595,9 +656,12 @@ export default function App() {
       dates.push(formatDate(d));
     }
 
+    // Determine all possible time slots for the week view (union of all daily slots)
+    // We know max range is 9am-5pm
     const allSlots = [];
     for (let h = 9; h <= 16; h++) {
         for (let m = 0; m < 60; m += 15) {
+            // Cap at 16:00 to keep grid clean
             if (h === 16 && m > 0) break;
             allSlots.push(`${h}:${m === 0 ? '00' : m}`);
         }
@@ -614,6 +678,7 @@ export default function App() {
         </div>
 
         <div className="min-w-[800px] bg-white border border-stone-200 text-xs">
+          {/* Header Row */}
           <div className="grid grid-cols-8 border-b border-stone-200 bg-stone-50">
             <div className="p-2 font-bold text-stone-400 text-center border-r">Time</div>
             {dates.map(dateStr => {
@@ -627,6 +692,7 @@ export default function App() {
             })}
           </div>
 
+          {/* Time Rows */}
           {allSlots.map(time => (
             <div key={time} className="grid grid-cols-8 border-b border-stone-100 h-10 hover:bg-stone-50">
               <div className="p-2 text-center border-r font-mono text-stone-500 flex items-center justify-center bg-stone-50">
@@ -900,6 +966,24 @@ export default function App() {
     </div>
   );
 
+  const renderWhatWeTreat = () => (
+    <div className="animate-in fade-in duration-500 py-16 px-6">
+      <SectionHeader title={t.whatWeTreatPage.title} subtitle={t.whatWeTreatPage.subtitle} />
+      <div className="max-w-4xl mx-auto">
+        <div className="grid gap-4">
+            {t.whatWeTreatPage.list.map((item, i) => (
+                <div key={i} className="flex items-start gap-4 p-4 bg-stone-50 rounded-lg border border-stone-100 hover:border-emerald-200 transition-colors">
+                    <div className="mt-1 text-emerald-600 shrink-0">
+                        <CheckCircle2 size={20} />
+                    </div>
+                    <p className="text-stone-700 leading-relaxed">{item}</p>
+                </div>
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+
   const getServiceIcon = (index) => {
     if (index % 4 === 0) return <Leaf size={32} />;
     if (index % 4 === 1) return <Activity size={32} />;
@@ -942,6 +1026,11 @@ export default function App() {
            <div className="md:w-1/2 space-y-6 text-stone-600 text-lg leading-relaxed">
              <p>{t.aboutPage.p1}</p>
              <p>{t.aboutPage.p2}</p>
+             <p>{t.aboutPage.p3}</p>
+             <p>{t.aboutPage.p4}</p>
+             <p>{t.aboutPage.p5}</p>
+             <p>{t.aboutPage.p6}</p>
+             <p>{t.aboutPage.p7}</p>
              <div className="flex gap-6 mt-8 pt-8 border-t border-stone-200">
                {t.aboutPage.stats.map((stat, i) => (
                  <div key={i}>
@@ -1023,7 +1112,7 @@ export default function App() {
           </button>
 
           <div className="hidden md:flex items-center gap-8">
-            {['home', 'services', 'about', 'appointments'].map(page => (
+            {['home', 'services', 'whatWeTreat', 'about', 'appointments'].map(page => (
                <button 
                  key={page}
                  onClick={() => setCurrentPage(page)} 
@@ -1048,7 +1137,7 @@ export default function App() {
 
         {isMobileMenuOpen && (
           <div className="md:hidden bg-stone-50 border-t border-stone-200 p-6 space-y-4">
-            {['home', 'services', 'about', 'appointments'].map(page => (
+            {['home', 'services', 'whatWeTreat', 'about', 'appointments'].map(page => (
               <button 
                 key={page}
                 onClick={() => { setCurrentPage(page); setIsMobileMenuOpen(false); }} 
@@ -1068,6 +1157,7 @@ export default function App() {
         {currentPage === 'home' && renderHome()}
         {currentPage === 'about' && renderAbout()}
         {currentPage === 'services' && renderServices()}
+        {currentPage === 'whatWeTreat' && renderWhatWeTreat()}
         {currentPage === 'appointments' && renderAppointments()}
         {currentPage === 'testimonials' && (
            <div className="animate-in fade-in duration-500 py-16 px-6">
@@ -1100,8 +1190,8 @@ export default function App() {
            </div>
            <div>
              <h4 className="text-white font-bold uppercase tracking-widest mb-4">Hours</h4>
-             <p>Mon - Fri: 9:00 AM - 5:00 PM</p>
-             <p>Sat: 9:00 AM - 4:00 PM</p>
+             <p>Mon - Fri: 9:00 AM - 4:00 PM</p>
+             <p>Sat: 9:00 AM - 3:00 PM</p>
              <p>Sun: Closed</p>
            </div>
         </div>
@@ -1110,7 +1200,7 @@ export default function App() {
       {/* Booking Modal */}
       <Modal isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)} title={`${t.bookSlot}: ${selectedSlot}`}>
         <form onSubmit={submitBooking} className="space-y-5">
-          <div className="p-4 bg-stone-50 text-stone-600 text-sm border-l-4 border-emerald-600">
+          <div className="p-4 bg-stone-600 text-stone-600 text-sm border-l-4 border-emerald-600">
              <p>{t.enterDetails}</p>
              <p className="mt-1 font-bold text-red-500 text-xs">{t.requiredFields}</p>
           </div>
