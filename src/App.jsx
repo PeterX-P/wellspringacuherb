@@ -48,14 +48,17 @@ import {
 // --- CONFIGURATION ---
 // IMPORTANT: Replace these values with your actual Firebase project keys
 // Go to Firebase Console -> Project Settings -> General -> Your Apps
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDJosQQhRGcebaxJQ37gNTnqXawsYHO9oI",
-  authDomain: "harmony-acupuncture.firebaseapp.com",
-  projectId: "harmony-acupuncture",
-  storageBucket: "harmony-acupuncture.firebasestorage.app",
-  messagingSenderId: "78608558880",
-  appId: "1:78608558880:web:adbb1fe3596d2b88c58545"
+  apiKey: "AIzaSyBAx0Dle1zLqGvsfnoJNZMWtDOGf_HEDVE",
+  authDomain: "website-project-6287f.firebaseapp.com",
+  projectId: "website-project-6287f",
+  storageBucket: "website-project-6287f.firebasestorage.app",
+  messagingSenderId: "112814688225",
+  appId: "1:112814688225:web:81db3f11d32f312fae74a0",
+  measurementId: "G-FHC2KH9NH0"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
