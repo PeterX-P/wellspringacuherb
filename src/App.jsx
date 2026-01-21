@@ -42,23 +42,20 @@ import {
   Ban,
   Mail,
   HelpingHand,
-  CheckCircle2 
+  CheckCircle2,
+  XCircle 
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
-// IMPORTANT: Replace these values with your actual Firebase project keys
-// Go to Firebase Console -> Project Settings -> General -> Your Apps
-
 const firebaseConfig = {
-  apiKey: "AIzaSyBAx0Dle1zLqGvsfnoJNZMWtDOGf_HEDVE",
-  authDomain: "website-project-6287f.firebaseapp.com",
-  projectId: "website-project-6287f",
-  storageBucket: "website-project-6287f.firebasestorage.app",
-  messagingSenderId: "112814688225",
-  appId: "1:112814688225:web:81db3f11d32f312fae74a0",
-  measurementId: "G-FHC2KH9NH0"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -126,6 +123,7 @@ const TRANSLATIONS = {
     endTime: "End Time",
     blockConfirm: "Block Selected Range",
     apptDetails: "Appointment Details",
+    unblock: "Unblock",
     servicesPage: {
       title: "Our Specialties",
       subtitle: "Comprehensive care for your well-being",
@@ -231,6 +229,7 @@ const TRANSLATIONS = {
     endTime: "結束時間",
     blockConfirm: "封鎖選定範圍",
     apptDetails: "預約詳情",
+    unblock: "解除封鎖",
     servicesPage: {
       title: "專業服務",
       subtitle: "為您量身定制的整體療法",
@@ -397,7 +396,7 @@ export default function App() {
   const t = TRANSLATIONS[lang];
 
   useEffect(() => {
-    signInAnonymously(auth).catch(err => console.error(err));
+    signInAnonymously(auth).catch(err => console.error("Auth failed:", err));
     return onAuthStateChanged(auth, setUser);
   }, []);
 
@@ -408,6 +407,8 @@ export default function App() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setAppointments(data);
+    }, (error) => {
+       console.error("Error fetching appointments:", error);
     });
     return () => unsubscribe();
   }, [user]);
@@ -433,6 +434,7 @@ export default function App() {
       setIsSettingsOpen(false);
     } catch (err) {
       console.error("Error saving settings:", err);
+      setFormError(`Save failed: ${err.message}`);
     }
   };
 
@@ -498,34 +500,38 @@ export default function App() {
       });
 
       // 2. Trigger Email Notification (Requires "Trigger Email" Firebase Extension)
-      await addDoc(collection(db, 'mail'), {
-        to: [email, 'wellspringacuherb@gmail.com'],
-        message: {
-          subject: `Appointment Confirmation: ${fullName} on ${selectedDate}`,
-          text: `Dear ${firstName},\n\nYour appointment has been confirmed.\n\nDate: ${selectedDate}\nTime: ${selectedSlot}\nLocation: 655 Concord Street, Framingham 01702\nPhone: 508-628-1888\n\nTo cancel or reschedule, please visit our website.\n\nThank you,\nWellspring Acupuncture`,
-          html: `
-            <div style="font-family: sans-serif; padding: 20px; color: #333;">
-              <h2 style="color: #064e3b;">Appointment Confirmed</h2>
-              <p>Dear ${firstName},</p>
-              <p>Your appointment has been successfully booked.</p>
-              <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #059669; margin: 20px 0;">
-                <p><strong>Date:</strong> ${selectedDate}</p>
-                <p><strong>Time:</strong> ${selectedSlot}</p>
-                <p><strong>Patient:</strong> ${fullName}</p>
-              </div>
-              <p><strong>Location:</strong><br/>655 Concord Street, Framingham 01702</p>
-              <p><strong>Phone:</strong> 508-628-1888</p>
-              <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #666;">Wellspring Acupuncture</p>
-            </div>
-          `
-        }
-      });
+      try {
+        await addDoc(collection(db, 'mail'), {
+            to: [email, 'wellspringacuherb@gmail.com'],
+            message: {
+            subject: `Appointment Confirmation: ${fullName} on ${selectedDate}`,
+            text: `Dear ${firstName},\n\nYour appointment has been confirmed.\n\nDate: ${selectedDate}\nTime: ${selectedSlot}\nLocation: 655 Concord Street, Framingham 01702\nPhone: 508-628-1888\n\nTo cancel or reschedule, please visit our website.\n\nThank you,\nWellspring Acupuncture`,
+            html: `
+                <div style="font-family: sans-serif; padding: 20px; color: #333;">
+                <h2 style="color: #064e3b;">Appointment Confirmed</h2>
+                <p>Dear ${firstName},</p>
+                <p>Your appointment has been successfully booked.</p>
+                <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #059669; margin: 20px 0;">
+                    <p><strong>Date:</strong> ${selectedDate}</p>
+                    <p><strong>Time:</strong> ${selectedSlot}</p>
+                    <p><strong>Patient:</strong> ${fullName}</p>
+                </div>
+                <p><strong>Location:</strong><br/>655 Concord Street, Framingham 01702</p>
+                <p><strong>Phone:</strong> 508-628-1888</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p style="font-size: 12px; color: #666;">Wellspring Acupuncture</p>
+                </div>
+            `
+            }
+        });
+      } catch (emailErr) {
+          console.error("Email trigger failed:", emailErr);
+      }
       
       setIsBookingModalOpen(false);
     } catch (err) {
       console.error(err);
-      setFormError('Booking failed. Please try again.');
+      setFormError(`Booking failed: ${err.message}`);
     }
   };
 
