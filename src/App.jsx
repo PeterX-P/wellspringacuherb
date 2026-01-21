@@ -173,7 +173,7 @@ const TRANSLATIONS = {
   zh: {
     menu: {
       home: "首頁",
-      appointments: "線上的預約",
+      appointments: "線上預約",
       services: "服務項目",
       whatWeTreat: "治疗范围",
       about: "關於我們",
