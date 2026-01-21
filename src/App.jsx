@@ -66,7 +66,7 @@ const db = getFirestore(app);
 const TRANSLATIONS = {
   en: {
     menu: {
-      home:   "Home",
+      home: "Home",
       appointments: "Appointments",
       services: "Services",
       whatWeTreat: "What We Treat",
@@ -802,7 +802,9 @@ export default function App() {
                     const isAllowed = isDateAllowed(dateStr); 
 
                     // Check for appointments on this day (for highlighting)
+                    // Modified: Only check if user is admin
                     const hasAppointments = appointments.some(a => a.date === dateStr && a.type === 'booking');
+                    const shouldHighlight = isAdmin && hasAppointments;
                     
                     slots.push(
                       <button
@@ -811,7 +813,7 @@ export default function App() {
                         disabled={isPast || !isAllowed}
                         className={`h-9 w-9 mx-auto rounded-full flex items-center justify-center text-sm transition-all ${
                           isSelected ? 'bg-emerald-800 text-white font-bold' : 
-                          hasAppointments ? 'font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 ring-1 ring-emerald-200' : 
+                          shouldHighlight ? 'font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 ring-1 ring-emerald-200' : 
                           'hover:bg-emerald-50 text-stone-600'
                         } ${isPast || !isAllowed ? 'text-stone-300 cursor-not-allowed opacity-50 hover:bg-transparent' : ''}`}
                       >
