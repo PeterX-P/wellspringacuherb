@@ -47,8 +47,11 @@ import {
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
-// We access import.meta.env. If this fails in the local preview, it is expected.
-// This WILL work when deployed to GitHub via Vite.
+
+// OPTION 1: SECURE VERSION (For GitHub Secrets)
+// If you want to use the secrets defined in your deploy.yml, 
+// UNCOMMENT this block and DELETE the "OPTION 2" block below.
+/*
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -57,6 +60,20 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+};
+*/
+
+// OPTION 2: COMPATIBLE VERSION (Hardcoded)
+// Use this to fix the "import.meta" error in this editor. 
+// It works perfectly on GitHub/Live Site as well.
+const firebaseConfig = {
+  apiKey: "AIzaSyBAx0Dle1zLqGvsfnoJNZMWtDOGf_HEDVE",
+  authDomain: "website-project-6287f.firebaseapp.com",
+  projectId: "website-project-6287f",
+  storageBucket: "website-project-6287f.firebasestorage.app",
+  messagingSenderId: "112814688225",
+  appId: "1:112814688225:web:81db3f11d32f312fae74a0",
+  measurementId: "G-FHC2KH9NH0"
 };
 
 // Initialize Firebase
@@ -267,7 +284,7 @@ const TRANSLATIONS = {
       p5: "在针研所期间，她先后跟随多位名师学习：师从中国第一位针灸学博士何金森教授，系统掌握甲状腺疾病、眼病及内分泌疾病的针灸治疗；跟随针灸文献大家叶明柱教授，研习内外科各类杂病的针灸证治——叶老师知识渊博，同一疾病常能提出十余种治疗思路，令她深受启发；又师从泌尿科权威汪司右教授，系统掌握盆底疾病的针灸治疗方法，并由此刷新了她对中医临床科研路径的理解。",
       p6: "随后因缘际会，师从杨氏针灸第二代传人徐明光医生，成为杨氏针灸第三代传人。同时，她也成为美国金观源教授学术传承堂的一员，并在第二届国际师承班跟随不孕症专家梁东云老师系统研习不孕症的针药证治。",
       p7: "学无止境，道亦无涯。一路走来，她的临床视野与技术不断更新、沉淀与提升， 2021年起开始在美国医疗体系内执业，提供以病人为中心、基于诊断与评估的针灸与中药治疗服务。丰博士始终秉持安全、审慎与整合性的医疗理念，注重功能改善与长期调理，并在必要时与其他医疗专业人员协作，为患者提供规范、可靠的针灸医疗服务。愿所学之术，能成为真正的医治之器，为每一位前来求助的人，带去希望、安慰与福音。",
-      stats: ["15年+ 经验", "5000+ 患者", "认證專家"]
+      stats: ["15+ Years", "5k+ Patients", "Licensed Pros"]
     },
     testimonialsPage: {
       title: "患者心聲",
@@ -296,6 +313,16 @@ const formatDate = (date) => {
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+};
+
+// Convert 24h format (14:30) to 12h format (2:30 PM)
+const formatTime12 = (time24) => {
+  if (!time24) return '';
+  const [h, m] = time24.split(':');
+  const hour = parseInt(h, 10);
+  const suffix = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${m} ${suffix}`;
 };
 
 // Generate 15-minute intervals for the day
@@ -485,6 +512,7 @@ export default function App() {
     }
     
     const fullName = `${firstName.trim()} ${lastName.trim()}`;
+    const appointmentTime12 = formatTime12(selectedSlot);
 
     try {
       // 1. Save to appointments collection
@@ -508,12 +536,12 @@ export default function App() {
           to: [email],
           message: {
             subject: `Appointment Confirmation: ${fullName} on ${selectedDate}`,
-            text: `Hi ${firstName},\n\nWe look forward to seeing you on ${selectedDate} at ${selectedSlot} at 655 Concord St, Framingham, MA 01702.\n\nTo cancel or reschedule, please call 508-628-1888 at least 24 hours in advance.\n\nWarmly, Wellspring Acupuncture and Herbs`,
+            text: `Hi ${firstName},\n\nWe look forward to seeing you on ${selectedDate} at ${appointmentTime12} at 655 Concord St, Framingham, MA 01702.\n\nTo cancel or reschedule, please call 508-628-1888 at least 24 hours in advance.\n\nWarmly, Wellspring Acupuncture and Herbs`,
             html: `
               <div style="font-family: sans-serif; font-size: 14px; color: #333;">
                 <p>Hi ${firstName},</p>
-                <p>We look forward to seeing you on <strong>${selectedDate}</strong> at <strong>${selectedSlot}</strong> at 655 Concord St, Framingham, MA 01702.</p>
-                <p>To cancel or reschedule, please call 508-628-1888 at least 24 hours in advance.</p>
+                <p>We look forward to seeing you on <strong>${selectedDate}</strong> at <strong>${appointmentTime12}</strong> at 655 Concord St, Framingham, MA 01702.</p>
+                <p>To cancel or reschedule, please call <strong>508-628-1888</strong> at least 24 hours in advance.</p>
                 <p>Warmly,<br/>Wellspring Acupuncture and Herbs</p>
               </div>
             `
