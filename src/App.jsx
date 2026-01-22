@@ -47,6 +47,8 @@ import {
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
+// We access import.meta.env. If this fails in the local preview, it is expected.
+// This WILL work when deployed to GitHub via Vite.
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -237,23 +239,23 @@ const TRANSLATIONS = {
         { title: "傳統針灸", desc: "激發身體的自然癒合能力，減少疼痛和炎症。" },
         { title: "拔罐療法", desc: "利用真空療法促進血液循環和肌肉放鬆。" },
         { title: "中藥調理", desc: "根據您的體質定制的草本配方。" },
-        { title: "中医推拿疗法", desc: "通过手法操作放松肌肉、促进血液循环，帮助恢复身体平衡，支持身体的自然修复过程。" }
+        { title: "中医推拿疗法", desc: "通過手法操作放鬆肌肉、促進血液循環，幫助恢復身體平衡，支持身體的自然修復過程。" }
       ]
     },
     whatWeTreatPage: {
       title: "治疗范围",
-      subtitle: "针对多种疾病的整体治疗方案",
+      subtitle: "針對多種疾病的整體治療方案",
       list: [
-        "女性健康与生殖相关问题，包括不孕症支持、月经不调、痛经、多囊卵巢综合征（PCOS）及更年期综合征等",
-        "压力相关问题，包括焦虑、抑郁及睡眠障碍等",
-        "盆底及泌尿功能障碍，包括产后或术后尿失禁、神经源性膀胱、尿频尿急综合征及性功能障碍等",
-        "神经系统相关疾病，包括偏头痛、神经性疼痛、面瘫及带状疱疹后神经痛",
-        "肌肉骨骼疼痛，包括颈部、肩部、腰部及膝关节疼痛",
-        "代谢与内分泌相关问题，包括肥胖、甲状腺功能异常、代谢综合征（高血压、糖尿病及高血脂）",
-        "消化系统疾病，包括消化不良，肠易激综合征、炎症性肠病等",
-        "眼、耳、鼻相关问题，包括过敏、鼻窦炎、耳鸣、干眼症、青光眼等",
-        "皮肤相关问题，包括痤疮、湿疹、带状疱疹、荨麻疹、皮下囊肿、皮脂腺炎等",
-        "美容针灸（面部年轻化及皮肤状态改善），针灸减肥"
+        "女性健康與生殖相關問題，包括不孕症支持、月經不調、痛經、多囊卵巢綜合徵（PCOS）及更年期綜合徵等",
+        "壓力相關問題，包括焦慮、抑鬱及睡眠障礙等",
+        "盆底及泌尿功能障礙，包括產後或術後尿失禁、神經源性膀胱、尿頻尿急綜合徵及性功能障礙等",
+        "神經系統相關疾病，包括偏頭痛、神經性疼痛、面癱及帶狀皰疹後神經痛",
+        "肌肉骨骼疼痛，包括頸部、肩部、腰部及膝關節疼痛",
+        "代謝與內分泌相關問題，包括肥胖、甲狀腺功能異常、代謝綜合徵（高血壓、糖尿病及高血脂）",
+        "消化系統疾病，包括消化不良，腸易激綜合徵、炎症性腸病等",
+        "眼、耳、鼻相關問題，包括過敏、鼻竇炎、耳鳴、乾眼症、青光眼等",
+        "皮膚相關問題，包括痤瘡、濕疹、帶狀皰疹、蕁麻疹、皮下囊腫、皮脂腺炎等",
+        "美容針灸（面部年輕化及皮膚狀態改善），針灸減肥"
       ]
     },
     aboutPage: {
@@ -501,29 +503,38 @@ export default function App() {
 
       // 2. Trigger Email Notification (Requires "Trigger Email" Firebase Extension)
       try {
+        // Email 1: To Patient
         await addDoc(collection(db, 'mail'), {
-            to: [email, 'wellspringacuherb@gmail.com'],
-            message: {
+          to: [email],
+          message: {
             subject: `Appointment Confirmation: ${fullName} on ${selectedDate}`,
-            text: `Dear ${firstName},\n\nYour appointment has been confirmed.\n\nDate: ${selectedDate}\nTime: ${selectedSlot}\nLocation: 655 Concord Street, Framingham 01702\nPhone: 508-628-1888\n\nTo cancel or reschedule, please visit our website.\n\nThank you,\nWellspring Acupuncture`,
+            text: `Hi ${firstName},\n\nWe look forward to seeing you on ${selectedDate} at ${selectedSlot} at 655 Concord St, Framingham, MA 01702.\n\nTo cancel or reschedule, please call 508-628-1888 at least 24 hours in advance.\n\nWarmly, Wellspring Acupuncture and Herbs`,
             html: `
-                <div style="font-family: sans-serif; padding: 20px; color: #333;">
-                <h2 style="color: #064e3b;">Appointment Confirmed</h2>
-                <p>Dear ${firstName},</p>
-                <p>Your appointment has been successfully booked.</p>
-                <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; border-left: 4px solid #059669; margin: 20px 0;">
-                    <p><strong>Date:</strong> ${selectedDate}</p>
-                    <p><strong>Time:</strong> ${selectedSlot}</p>
-                    <p><strong>Patient:</strong> ${fullName}</p>
-                </div>
-                <p><strong>Location:</strong><br/>655 Concord Street, Framingham 01702</p>
-                <p><strong>Phone:</strong> 508-628-1888</p>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-                <p style="font-size: 12px; color: #666;">Wellspring Acupuncture</p>
-                </div>
+              <div style="font-family: sans-serif; font-size: 14px; color: #333;">
+                <p>Hi ${firstName},</p>
+                <p>We look forward to seeing you on <strong>${selectedDate}</strong> at <strong>${selectedSlot}</strong> at 655 Concord St, Framingham, MA 01702.</p>
+                <p>To cancel or reschedule, please call 508-628-1888 at least 24 hours in advance.</p>
+                <p>Warmly,<br/>Wellspring Acupuncture and Herbs</p>
+              </div>
             `
-            }
+          }
         });
+
+        // Email 2: To Practitioner
+        await addDoc(collection(db, 'mail'), {
+          to: ['wellspringacuherb@gmail.com'],
+          message: {
+            subject: `New Appointment Alert: ${fullName}`,
+            text: `Hi, ${fullName} has made an appointment on ${selectedDate} at ${selectedSlot}`,
+            html: `
+              <div style="font-family: sans-serif; font-size: 14px; color: #333;">
+                <p>Hi,</p>
+                <p><strong>${fullName}</strong> has made an appointment on <strong>${selectedDate}</strong> at <strong>${selectedSlot}</strong>.</p>
+              </div>
+            `
+          }
+        });
+
       } catch (emailErr) {
           console.error("Email trigger failed:", emailErr);
       }
