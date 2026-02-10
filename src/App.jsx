@@ -42,7 +42,8 @@ import {
   Ban,
   Mail,
   HelpingHand,
-  CheckCircle2
+  CheckCircle2,
+  XCircle
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -353,8 +354,11 @@ const getDailySlots = (dateStr) => {
   let currentHour = startHour;
   let currentMinute = startMinute;
 
-  // Simple loop to generate slots until we hit the end time
-  while (true) {
+  // Safer loop
+  let safetyCounter = 0;
+  while (safetyCounter < 50) { // Safety break
+    safetyCounter++;
+    
     // Check if we've passed the end time
     if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
       break;
@@ -369,9 +373,6 @@ const getDailySlots = (dateStr) => {
       currentMinute = 0;
       currentHour += 1;
     }
-    
-    // Safety break to prevent infinite loops if logic fails
-    if (currentHour > 23) break;
   }
 
   return slots;
@@ -820,6 +821,202 @@ export default function App() {
               })}
             </div>
           ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderDailyView = () => {
+    const dailySlots = getDailySlots(selectedDate);
+    const isAllowedDate = isDateAllowed(selectedDate);
+
+    return (
+      <div className="flex flex-col md:flex-row gap-12">
+        {/* Calendar Sidebar */}
+        <div className="md:w-1/3">
+          <div className="bg-white p-6 shadow-lg border border-stone-100 sticky top-24">
+            <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-stone-100 pb-2">
+              <Calendar size={16} /> {t.selectDate}
+            </h3>
+            
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-4">
+                <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronLeft size={20}/></button>
+                <span className="font-bold text-stone-700">
+                  {viewMonth.toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { year: 'numeric', month: 'long' })}
+                </span>
+                <button onClick={() => changeMonth(1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronRight size={20}/></button>
+              </div>
+              
+              <div className="grid grid-cols-7 text-center mb-2">
+                {(lang === 'en' ? ['S','M','T','W','T','F','S'] : ['日','一','二','三','四','五','六']).map(d => (
+                  <div key={d} className="text-xs font-bold text-stone-400">{d}</div>
+                ))}
+              </div>
+              
+              <div className="grid grid-cols-7 gap-1">
+                {(() => {
+                  const year = viewMonth.getFullYear();
+                  const month = viewMonth.getMonth();
+                  const firstDay = new Date(year, month, 1);
+                  const lastDay = new Date(year, month + 1, 0);
+                  const startDay = firstDay.getDay();
+                  const slots = [];
+                  for(let i=0; i<startDay; i++) slots.push(<div key={`empty-${i}`} />);
+                  for(let i=1; i<=lastDay.getDate(); i++) {
+                    const date = new Date(year, month, i);
+                    const dateStr = formatDate(date);
+                    const isSelected = dateStr === selectedDate;
+                    const isPast = date < new Date(new Date().setHours(0,0,0,0));
+                    
+                    const isAllowed = isDateAllowed(dateStr); 
+
+                    // Check for appointments on this day (for highlighting)
+                    // Modified: Only check if user is admin
+                    const hasAppointments = appointments.some(a => a.date === dateStr && a.type === 'booking');
+                    const shouldHighlight = isAdmin && hasAppointments;
+                    
+                    slots.push(
+                      <button
+                        key={dateStr}
+                        onClick={() => !isPast && isAllowed && setSelectedDate(dateStr)}
+                        disabled={isPast || !isAllowed}
+                        className={`h-9 w-9 mx-auto rounded-full flex items-center justify-center text-sm transition-all ${
+                          isSelected ? 'bg-emerald-800 text-white font-bold' : 
+                          shouldHighlight ? 'font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 ring-1 ring-emerald-200' : 
+                          'hover:bg-emerald-50 text-stone-600'
+                        } ${isPast || !isAllowed ? 'text-stone-300 cursor-not-allowed opacity-50 hover:bg-transparent' : ''}`}
+                      >
+                        {i}
+                      </button>
+                    );
+                  }
+                  return slots;
+                })()}
+              </div>
+            </div>
+
+            <div className="bg-emerald-50 p-4 rounded-sm border border-emerald-100">
+              <div className="text-xs text-emerald-800 font-bold uppercase mb-2">Selected Date</div>
+              <div className="text-xl font-serif font-bold text-emerald-900">
+                {parseLocal(selectedDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { weekday: 'long', month: 'long', day: 'numeric' })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="md:w-2/3">
+          <div className="flex justify-between items-center mb-6 border-b border-stone-200 pb-2">
+             <h3 className="text-lg font-bold text-emerald-900 uppercase tracking-wide text-sm">
+                Available Times <span className="text-xs normal-case text-stone-500 font-normal ml-2">EST</span>
+             </h3>
+             {isAdmin && (
+               <div className="flex gap-2">
+                 <button 
+                   onClick={() => setIsBlockRangeOpen(true)} 
+                   className="flex items-center gap-1 text-xs bg-red-50 hover:bg-red-100 text-red-900 px-3 py-1 rounded-full font-bold transition-colors"
+                 >
+                   <Ban size={14}/> {t.blockRange}
+                 </button>
+                 <button 
+                   onClick={() => setViewMode('week')} 
+                   className="flex items-center gap-1 text-xs bg-stone-100 hover:bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold transition-colors"
+                 >
+                   <Grid size={14}/> {t.weekView}
+                 </button>
+               </div>
+             )}
+          </div>
+          
+          {dailySlots.length === 0 ? (
+            <div className="text-center py-12 text-stone-500 bg-stone-50 border border-dashed border-stone-200">
+              <Clock className="mx-auto mb-2 text-stone-400" />
+              <p>Closed on Sundays. Please select another date.</p>
+            </div>
+          ) : !isAllowedDate && !isAdmin ? (
+             <div className="text-center py-12 text-red-500 bg-red-50 border border-dashed border-red-200">
+               <Calendar className="mx-auto mb-2 opacity-50" />
+               <p>Booking not yet open for this date.</p>
+             </div>
+          ) : (
+            <div className="space-y-4">
+              {dailySlots.map((slot) => {
+                const { isBlocked, remaining, bookings } = getSlotData(selectedDate, slot);
+                const now = new Date();
+                const isToday = selectedDate === formatDate(now);
+                const [h, m] = slot.split(':').map(Number);
+                const slotDate = new Date();
+                slotDate.setHours(h, m, 0, 0);
+                const isPastTime = isToday && slotDate < now;
+                const isFull = remaining === 0;
+
+                // Hide unavailable slots for patients (booked, blocked, or past)
+                if (!isAdmin && (isBlocked || isFull || isPastTime)) {
+                  return null;
+                }
+                
+                return (
+                  <div key={slot} className="bg-white border border-stone-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-colors">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-1">
+                        <Clock size={18} className="text-emerald-700" />
+                        <span className="text-xl font-serif font-bold text-stone-800">{slot}</span>
+                      </div>
+                      <div className="flex gap-2 text-xs font-bold uppercase tracking-wider">
+                        {isBlocked ? (
+                          <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.blocked}</span>
+                        ) : isPastTime ? (
+                          <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.past}</span>
+                        ) : isFull ? (
+                          <span className="text-red-500 bg-red-50 px-2 py-0.5 rounded">{t.full}</span>
+                        ) : (
+                          <span className="text-emerald-600 px-2 py-0.5 rounded"></span>
+                        )}
+                      </div>
+                    </div>
+
+                    {!isAdmin ? (
+                      <button
+                        onClick={() => handleBookClick(slot)}
+                        disabled={isFull || isBlocked || isPastTime}
+                        className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-all min-w-[140px] ${
+                          isFull || isBlocked || isPastTime
+                            ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
+                            : 'bg-emerald-800 text-white hover:bg-emerald-900 shadow-sm'
+                        }`}
+                      >
+                        {isBlocked || isFull || isPastTime ? 'Unavailable' : 'Select'}
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        <button onClick={() => toggleBlockSlot(selectedDate, slot, isBlocked)} className="text-xs bg-stone-200 hover:bg-stone-300 px-3 py-2 font-bold uppercase">{isBlocked ? t.unblock : 'Block'}</button>
+                      </div>
+                    )}
+                    
+                    {isAdmin && bookings.length > 0 && (
+                      <div className="w-full sm:w-auto mt-2 sm:mt-0 pt-2 sm:pt-0 sm:border-l sm:border-stone-100 sm:pl-4">
+                        {bookings.map(b => (
+                          <div key={b.id} className="text-xs mb-1 flex items-center justify-between gap-2 bg-stone-50 p-1.5 rounded">
+                            <div className="overflow-hidden">
+                              <div className="font-bold truncate">{b.name}</div>
+                              <div className="text-stone-500">{b.phone}</div>
+                              <div className="text-stone-400 truncate" title={b.email}>{b.email}</div>
+                            </div>
+                            <div className="flex gap-1 self-start">
+                              <a href={`tel:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Call"><Phone size={12}/></a>
+                              <a href={`sms:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Text"><MessageCircle size={12}/></a>
+                              <a href={`mailto:${b.email}`} className="p-1 bg-white border hover:bg-emerald-50" title="Email"><Mail size={12}/></a>
+                              <button onClick={() => handleDeleteBooking(b.id)} className="p-1 bg-white border hover:bg-red-50 text-red-600" title="Delete"><Trash2 size={12}/></button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     );
