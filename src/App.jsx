@@ -103,7 +103,7 @@ const TRANSLATIONS = {
     welcomeTitle: "Welcome to Wellspring Acupuncture and Herbs",
     welcomeText: "We are dedicated to providing personalized care that addresses the root cause of your health concerns. Our clinic offers a sanctuary for healing, combining ancient wisdom with modern medical understanding.",
     bookingTitle: "Schedule Your Visit",
-    bookingSubtitle: "Select a time that works for you. Private treatment sessions available every 15 minutes.",
+    bookingSubtitle: "Select a time that works for you. Private treatment sessions available every 30 minutes.",
     selectDate: "Select Date",
     full: "Booked",
     blocked: "Blocked",
@@ -209,7 +209,7 @@ const TRANSLATIONS = {
     welcomeTitle: "歡迎來到活泉中医针灸诊所",
     welcomeText: "我們致力於提供個性化的護理，解決您健康問題的根源。",
     bookingTitle: "預約您的診療",
-    bookingSubtitle: "選擇適合您的時間。每15分鐘提供一個私人治療時段。",
+    bookingSubtitle: "選擇適合您的時間。每30分鐘提供一個私人治療時段。",
     selectDate: "選擇日期",
     full: "已預約",
     blocked: "保留",
@@ -284,7 +284,7 @@ const TRANSLATIONS = {
       p5: "在针研所期间，她先后跟随多位名师学习：师从中国第一位针灸学博士何金森教授，系统掌握甲状腺疾病、眼病及内分泌疾病的针灸治疗；跟随针灸文献大家叶明柱教授，研习内外科各类杂病的针灸证治——叶老师知识渊博，同一疾病常能提出十余种治疗思路，令她深受启发；又师从泌尿科权威汪司右教授，系统掌握盆底疾病的针灸治疗方法，并由此刷新了她对中医临床科研路径的理解。",
       p6: "随后因缘际会，师从杨氏针灸第二代传人徐明光医生，成为杨氏针灸第三代传人。同时，她也成为美国金观源教授学术传承堂的一员，并在第二届国际师承班跟随不孕症专家梁东云老师系统研习不孕症的针药证治。",
       p7: "学无止境，道亦无涯。一路走来，她的临床视野与技术不断更新、沉淀与提升， 2021年起开始在美国医疗体系内执业，提供以病人为中心、基于诊断与评估的针灸与中药治疗服务。丰博士始终秉持安全、审慎与整合性的医疗理念，注重功能改善与长期调理，并在必要时与其他医疗专业人员协作，为患者提供规范、可靠的针灸医疗服务。愿所学之术，能成为真正的医治之器，为每一位前来求助的人，带去希望、安慰与福音。",
-      stats: ["15+ Years", "5k+ Patients", "Licensed Pros"]
+      stats: ["15年+ 经验", "5000+ 患者", "认證專家"]
     },
     testimonialsPage: {
       title: "患者心聲",
@@ -325,25 +325,78 @@ const formatTime12 = (time24) => {
   return `${hour12}:${m} ${suffix}`;
 };
 
-// Generate 15-minute intervals for the day
+// Generate 30-minute intervals for the day
 const getDailySlots = (dateStr) => {
   const date = parseLocal(dateStr);
   const day = date.getDay(); // 0 = Sun, 6 = Sat
   
   if (day === 0) return []; // Sunday closed
 
-  // M-F (1-5): 9am to 4pm
-  // Sat (6): 9am to 3pm
-  let startHour = 9;
-  let endHour = day === 6 ? 15 : 16; 
-
   const slots = [];
-  for (let h = startHour; h <= endHour; h++) {
-    for (let m = 0; m < 60; m += 15) {
-      if (h === endHour && m > 0) break; // End exactly at the hour
-      slots.push(`${h}:${m === 0 ? '00' : m}`);
-    }
+  
+  // Logic for different days
+  // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  
+  // Default Hours (Just in case, though all weekdays are covered now)
+  let startHour = 9;
+  let startMinute = 0;
+  let endHour = 16;
+  let endMinute = 0;
+
+  // Monday (1) & Thursday (4): 9:30 AM - 1:00 PM
+  if (day === 1 || day === 4) {
+    startHour = 9;
+    startMinute = 30;
+    endHour = 13;
+    endMinute = 0;
   }
+  // Tuesday (2), Wednesday (3), Friday (5): 9:30 AM - 4:00 PM
+  else if (day === 2 || day === 3 || day === 5) {
+    startHour = 9;
+    startMinute = 30;
+    endHour = 16;
+    endMinute = 0;
+  }
+  // Saturday (6): 9:00 AM - 3:00 PM
+  else if (day === 6) {
+    startHour = 9;
+    startMinute = 0;
+    endHour = 15;
+    endMinute = 0;
+  }
+
+  // Generate slots
+  let currentHour = startHour;
+  let currentMinute = startMinute;
+
+  // Simple loop to generate slots until we hit the end time
+  while (true) {
+    // Check if we've passed the end time
+    if (currentHour > endHour || (currentHour === endHour && currentMinute >= endMinute)) {
+      if (currentHour === endHour && currentMinute === endMinute) {
+         // Logic for inclusive end time can go here if needed
+         // Currently treating end time as exclusive for booking start times
+         // e.g. if close at 13:00, last slot starts at 12:30.
+         break;
+      } else {
+         break;
+      }
+    }
+    
+    // Add slot
+    slots.push(`${currentHour}:${currentMinute === 0 ? '00' : currentMinute}`);
+
+    // Increment by 30 mins
+    currentMinute += 30;
+    if (currentMinute >= 60) {
+      currentMinute = 0;
+      currentHour += 1;
+    }
+    
+    // Safety break to prevent infinite loops if logic fails
+    if (currentHour > 23) break;
+  }
+
   return slots;
 };
 
@@ -708,7 +761,7 @@ export default function App() {
     // We know max range is 9am-5pm
     const allSlots = [];
     for (let h = 9; h <= 16; h++) {
-        for (let m = 0; m < 60; m += 15) {
+        for (let m = 0; m < 60; m += 30) { // Changed from 15 to 30
             // Cap at 16:00 to keep grid clean
             if (h === 16 && m > 0) break;
             allSlots.push(`${h}:${m === 0 ? '00' : m}`);
