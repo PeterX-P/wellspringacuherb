@@ -42,26 +42,10 @@ import {
   Ban,
   Mail,
   HelpingHand,
-  CheckCircle2,
-  XCircle 
+  CheckCircle2
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
-
-// OPTION 1: SECURE VERSION (For GitHub Secrets)
-// If you want to use the secrets defined in your deploy.yml, 
-// UNCOMMENT this block and DELETE the "OPTION 2" block below.
-/*
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
-};
-*/
 
 // OPTION 2: COMPATIBLE VERSION (Hardcoded)
 // Use this to fix the "import.meta" error in this editor. 
