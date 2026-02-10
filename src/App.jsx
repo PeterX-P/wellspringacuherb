@@ -1472,6 +1472,7 @@ export default function App() {
                   }}
                   className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 hover:bg-red-100 rounded text-sm font-bold"
                 >
+
                   <Trash2 size={16}/> Cancel Appointment
                 </button>
              </div>
