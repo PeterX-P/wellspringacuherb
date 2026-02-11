@@ -43,10 +43,25 @@ import {
   Mail,
   HelpingHand,
   CheckCircle2,
-  XCircle
+  XCircle 
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
+
+// OPTION 1: SECURE VERSION (For GitHub Secrets)
+// If you want to use the secrets defined in your deploy.yml, 
+// UNCOMMENT this block and DELETE the "OPTION 2" block below.
+/*
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+};
+*/
 
 // OPTION 2: COMPATIBLE VERSION (Hardcoded)
 // Use this to fix the "import.meta" error in this editor. 
@@ -74,7 +89,7 @@ const TRANSLATIONS = {
       appointments: "Appointments",
       services: "Services",
       whatWeTreat: "What We Treat",
-      about: "About",
+      about: "About Us", 
       testimonials: "Testimonials"
     },
     title: "Wellspring Acupuncture and Herbs",
@@ -163,7 +178,30 @@ const TRANSLATIONS = {
       p5: "During this time, she studied with several highly respected masters in acupuncture. She trained with Professor Jinsen He, China’s first doctoral graduate in Acupuncture, focusing on acupuncture treatment for thyroid disorders, eye diseases, and endocrine conditions. Under Professor Mingzhu Ye’s guidance, a renowned scholar of acupuncture classics, she learned comprehensive approaches to complex internal and surgical conditions—often exploring multiple treatment strategies for a single diagnosis. She also trained with Professor Siyou Wang, a leading authority in urology, where she developed a systematic approach to treating pelvic floor disorders and gained a deeper understanding of clinically grounded research.",
       p6: "Through experiences with Dr Mingguang Xu, a second-generation lineage holder of Yang-style acupuncuture, she became a third-generation lineage holder of Yang-style acupuncture. She also received advanced mentorship through multiple international and domestic academic transmission programs, including training with Professor Guanyuan Jin in clinical acupuncture reflexology; specialized training in reproductive health and infertility with Dr Dongyun Yang,an international renowned infertility expert.",
       p7: "Medicine is a lifelong path of learning and humility. Since 2021 she has been practicing acupuncture and herbal medicine, providing patient-centered, diagnosis-informed care within the U.S. healthcare setting. Dr. Feng is committed to delivering safe, thoughtful, and integrative acupuncture care, with an emphasis on functional improvement, long-term regulation, and collaboration with other healthcare providers when appropriate. She believes that Chinese medicine, at its best, restores balance not only to the body, but also to the person as a whole, offering a renewed sense of stability, dignity, and hope.",
-      stats: ["15+ Years", "5k+ Patients", "Licensed Pros"]
+      stats: ["15+ Years", "5k+ Patients", "Licensed Pros"],
+      headshot: "头像1.jpg",
+      gallery: [
+        {
+          src: "2007年与硕士导师丁元庆教授.jpg",
+          text: "2007年硕士论文答辩后与硕士导师丁元庆教授，山东济南\nWith Professor Ding,Yuanqing, my Master Degree Tutor. Jinan,Shandong"
+        },
+        {
+          src: "与杨氏针灸第二代徐明光医生请李鼎先生为杨氏针灸荟萃题字.jpg",
+          text: "与请李鼎先生为《杨氏针灸荟萃》题字（与杨氏针灸第二代徐明光老师）\nTogether with Xu Mingguang, a second-generation inheritor of the Yang Family Acupuncture tradition, invited Mr. Li Ding to provide the calligraphic inscription for Yang Family Acupuncture Compendium."
+        },
+        {
+          src: "得李鼎先生赠书.jpg",
+          text: "得李鼎先生赠书\nReceived a gifted publication from Mr. Li Ding"
+        },
+        {
+          src: "与2017年诺奖得主Michael Rosbash在2018年哈佛医学院睡眠医学年会.jpg",
+          text: "2017年诺奖得主Michael Rosbash在2018年哈佛医学院睡眠医学年会\nWith Michael Rosbash, 2017 Nobel Prize laureate, at the 2018 Harvard Medical School Sleep Medicine Conference."
+        },
+        {
+          src: "与2017年诺奖得主Michael W. Young在2018年哈佛医学院睡眠医学年会.jpg",
+          text: "2017年诺奖得主Michael W. Young在2018年哈佛医学院睡眠医学年会\nWith Michael W. Young, 2017 Nobel Prize laureate, at the 2018 Harvard Medical School Sleep Medicine Conference."
+        }
+      ]
     },
     testimonialsPage: {
       title: "Patient Stories",
@@ -180,7 +218,7 @@ const TRANSLATIONS = {
       appointments: "線上預約",
       services: "服務項目",
       whatWeTreat: "治疗范围",
-      about: "關於我們",
+      about: "關於我們", 
       testimonials: "見證"
     },
     title: "活泉中医针灸诊所",
@@ -269,7 +307,30 @@ const TRANSLATIONS = {
       p5: "在针研所期间，她先后跟随多位名师学习：师从中国第一位针灸学博士何金森教授，系统掌握甲状腺疾病、眼病及内分泌疾病的针灸治疗；跟随针灸文献大家叶明柱教授，研习内外科各类杂病的针灸证治——叶老师知识渊博，同一疾病常能提出十余种治疗思路，令她深受启发；又师从泌尿科权威汪司右教授，系统掌握盆底疾病的针灸治疗方法，并由此刷新了她对中医临床科研路径的理解。",
       p6: "随后因缘际会，师从杨氏针灸第二代传人徐明光医生，成为杨氏针灸第三代传人。同时，她也成为美国金观源教授学术传承堂的一员，并在第二届国际师承班跟随不孕症专家梁东云老师系统研习不孕症的针药证治。",
       p7: "学无止境，道亦无涯。一路走来，她的临床视野与技术不断更新、沉淀与提升， 2021年起开始在美国医疗体系内执业，提供以病人为中心、基于诊断与评估的针灸与中药治疗服务。丰博士始终秉持安全、审慎与整合性的医疗理念，注重功能改善与长期调理，并在必要时与其他医疗专业人员协作，为患者提供规范、可靠的针灸医疗服务。愿所学之术，能成为真正的医治之器，为每一位前来求助的人，带去希望、安慰与福音。",
-      stats: ["15+ Years", "5k+ Patients", "Licensed Pros"]
+      stats: ["15年+ 经验", "5000+ 患者", "认證專家"],
+      headshot: "头像1.jpg",
+      gallery: [
+        {
+          src: "2007年与硕士导师丁元庆教授.jpg",
+          text: "2007年硕士论文答辩后与硕士导师丁元庆教授，山东济南\nWith Professor Ding,Yuanqing, my Master Degree Tutor. Jinan,Shandong"
+        },
+        {
+          src: "与杨氏针灸第二代徐明光医生请李鼎先生为杨氏针灸荟萃题字.jpg",
+          text: "与请李鼎先生为《杨氏针灸荟萃》题字（与杨氏针灸第二代徐明光老师）\nTogether with Xu Mingguang, a second-generation inheritor of the Yang Family Acupuncture tradition, invited Mr. Li Ding to provide the calligraphic inscription for Yang Family Acupuncture Compendium."
+        },
+        {
+          src: "得李鼎先生赠书.jpg",
+          text: "得李鼎先生赠书\nReceived a gifted publication from Mr. Li Ding"
+        },
+        {
+          src: "与2017年诺奖得主Michael Rosbash在2018年哈佛医学院睡眠医学年会.jpg",
+          text: "2017年诺奖得主Michael Rosbash在2018年哈佛医学院睡眠医学年会\nWith Michael Rosbash, 2017 Nobel Prize laureate, at the 2018 Harvard Medical School Sleep Medicine Conference."
+        },
+        {
+          src: "与2017年诺奖得主Michael W. Young在2018年哈佛医学院睡眠医学年会.jpg",
+          text: "2017年诺奖得主Michael W. Young在2018年哈佛医学院睡眠医学年会\nWith Michael W. Young, 2017 Nobel Prize laureate, at the 2018 Harvard Medical School Sleep Medicine Conference."
+        }
+      ]
     },
     testimonialsPage: {
       title: "患者心聲",
@@ -354,11 +415,8 @@ const getDailySlots = (dateStr) => {
   let currentHour = startHour;
   let currentMinute = startMinute;
 
-  // Safer loop
-  let safetyCounter = 0;
-  while (safetyCounter < 50) { // Safety break
-    safetyCounter++;
-    
+  // Simple loop to generate slots until we hit the end time
+  while (true) {
     // Check if we've passed the end time
     if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
       break;
@@ -373,6 +431,9 @@ const getDailySlots = (dateStr) => {
       currentMinute = 0;
       currentHour += 1;
     }
+    
+    // Safety break to prevent infinite loops if logic fails
+    if (currentHour > 23) break;
   }
 
   return slots;
@@ -826,300 +887,73 @@ export default function App() {
     );
   };
 
-  const renderDailyView = () => {
-    const dailySlots = getDailySlots(selectedDate);
-    const isAllowedDate = isDateAllowed(selectedDate);
-
-    return (
-      <div className="flex flex-col md:flex-row gap-12">
-        {/* Calendar Sidebar */}
-        <div className="md:w-1/3">
-          <div className="bg-white p-6 shadow-lg border border-stone-100 sticky top-24">
-            <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-stone-100 pb-2">
-              <Calendar size={16} /> {t.selectDate}
-            </h3>
-            
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronLeft size={20}/></button>
-                <span className="font-bold text-stone-700">
-                  {viewMonth.toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { year: 'numeric', month: 'long' })}
-                </span>
-                <button onClick={() => changeMonth(1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronRight size={20}/></button>
-              </div>
-              
-              <div className="grid grid-cols-7 text-center mb-2">
-                {(lang === 'en' ? ['S','M','T','W','T','F','S'] : ['日','一','二','三','四','五','六']).map(d => (
-                  <div key={d} className="text-xs font-bold text-stone-400">{d}</div>
-                ))}
-              </div>
-              
-              <div className="grid grid-cols-7 gap-1">
-                {(() => {
-                  const year = viewMonth.getFullYear();
-                  const month = viewMonth.getMonth();
-                  const firstDay = new Date(year, month, 1);
-                  const lastDay = new Date(year, month + 1, 0);
-                  const startDay = firstDay.getDay();
-                  const slots = [];
-                  for(let i=0; i<startDay; i++) slots.push(<div key={`empty-${i}`} />);
-                  for(let i=1; i<=lastDay.getDate(); i++) {
-                    const date = new Date(year, month, i);
-                    const dateStr = formatDate(date);
-                    const isSelected = dateStr === selectedDate;
-                    const isPast = date < new Date(new Date().setHours(0,0,0,0));
-                    
-                    const isAllowed = isDateAllowed(dateStr); 
-
-                    // Check for appointments on this day (for highlighting)
-                    // Modified: Only check if user is admin
-                    const hasAppointments = appointments.some(a => a.date === dateStr && a.type === 'booking');
-                    const shouldHighlight = isAdmin && hasAppointments;
-                    
-                    slots.push(
-                      <button
-                        key={dateStr}
-                        onClick={() => !isPast && isAllowed && setSelectedDate(dateStr)}
-                        disabled={isPast || !isAllowed}
-                        className={`h-9 w-9 mx-auto rounded-full flex items-center justify-center text-sm transition-all ${
-                          isSelected ? 'bg-emerald-800 text-white font-bold' : 
-                          shouldHighlight ? 'font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 ring-1 ring-emerald-200' : 
-                          'hover:bg-emerald-50 text-stone-600'
-                        } ${isPast || !isAllowed ? 'text-stone-300 cursor-not-allowed opacity-50 hover:bg-transparent' : ''}`}
-                      >
-                        {i}
-                      </button>
-                    );
-                  }
-                  return slots;
-                })()}
-              </div>
-            </div>
-
-            <div className="bg-emerald-50 p-4 rounded-sm border border-emerald-100">
-              <div className="text-xs text-emerald-800 font-bold uppercase mb-2">Selected Date</div>
-              <div className="text-xl font-serif font-bold text-emerald-900">
-                {parseLocal(selectedDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { weekday: 'long', month: 'long', day: 'numeric' })}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="md:w-2/3">
-          <div className="flex justify-between items-center mb-6 border-b border-stone-200 pb-2">
-             <h3 className="text-lg font-bold text-emerald-900 uppercase tracking-wide text-sm">
-                Available Times <span className="text-xs normal-case text-stone-500 font-normal ml-2">EST</span>
-             </h3>
-             {isAdmin && (
-               <div className="flex gap-2">
-                 <button 
-                   onClick={() => setIsBlockRangeOpen(true)} 
-                   className="flex items-center gap-1 text-xs bg-red-50 hover:bg-red-100 text-red-900 px-3 py-1 rounded-full font-bold transition-colors"
-                 >
-                   <Ban size={14}/> {t.blockRange}
-                 </button>
-                 <button 
-                   onClick={() => setViewMode('week')} 
-                   className="flex items-center gap-1 text-xs bg-stone-100 hover:bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold transition-colors"
-                 >
-                   <Grid size={14}/> {t.weekView}
-                 </button>
-               </div>
-             )}
-          </div>
-          
-          {dailySlots.length === 0 ? (
-            <div className="text-center py-12 text-stone-500 bg-stone-50 border border-dashed border-stone-200">
-              <Clock className="mx-auto mb-2 text-stone-400" />
-              <p>Closed on Sundays. Please select another date.</p>
-            </div>
-          ) : !isAllowedDate && !isAdmin ? (
-             <div className="text-center py-12 text-red-500 bg-red-50 border border-dashed border-red-200">
-               <Calendar className="mx-auto mb-2 opacity-50" />
-               <p>Booking not yet open for this date.</p>
-             </div>
-          ) : (
-            <div className="space-y-4">
-              {dailySlots.map((slot) => {
-                const { isBlocked, remaining, bookings } = getSlotData(selectedDate, slot);
-                const now = new Date();
-                const isToday = selectedDate === formatDate(now);
-                const [h, m] = slot.split(':').map(Number);
-                const slotDate = new Date();
-                slotDate.setHours(h, m, 0, 0);
-                const isPastTime = isToday && slotDate < now;
-                const isFull = remaining === 0;
-
-                // Hide unavailable slots for patients (booked, blocked, or past)
-                if (!isAdmin && (isBlocked || isFull || isPastTime)) {
-                  return null;
-                }
-                
-                return (
-                  <div key={slot} className="bg-white border border-stone-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-colors">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-1">
-                        <Clock size={18} className="text-emerald-700" />
-                        <span className="text-xl font-serif font-bold text-stone-800">{slot}</span>
-                      </div>
-                      <div className="flex gap-2 text-xs font-bold uppercase tracking-wider">
-                        {isBlocked ? (
-                          <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.blocked}</span>
-                        ) : isPastTime ? (
-                          <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.past}</span>
-                        ) : isFull ? (
-                          <span className="text-red-500 bg-red-50 px-2 py-0.5 rounded">{t.full}</span>
-                        ) : (
-                          <span className="text-emerald-600 px-2 py-0.5 rounded"></span>
-                        )}
-                      </div>
-                    </div>
-
-                    {!isAdmin ? (
-                      <button
-                        onClick={() => handleBookClick(slot)}
-                        disabled={isFull || isBlocked || isPastTime}
-                        className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-all min-w-[140px] ${
-                          isFull || isBlocked || isPastTime
-                            ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                            : 'bg-emerald-800 text-white hover:bg-emerald-900 shadow-sm'
-                        }`}
-                      >
-                        {isBlocked || isFull || isPastTime ? 'Unavailable' : 'Select'}
-                      </button>
-                    ) : (
-                      <div className="flex gap-2">
-                        <button onClick={() => toggleBlockSlot(selectedDate, slot, isBlocked)} className="text-xs bg-stone-200 hover:bg-stone-300 px-3 py-2 font-bold uppercase">{isBlocked ? t.unblock : 'Block'}</button>
-                      </div>
-                    )}
-                    
-                    {isAdmin && bookings.length > 0 && (
-                      <div className="w-full sm:w-auto mt-2 sm:mt-0 pt-2 sm:pt-0 sm:border-l sm:border-stone-100 sm:pl-4">
-                        {bookings.map(b => (
-                          <div key={b.id} className="text-xs mb-1 flex items-center justify-between gap-2 bg-stone-50 p-1.5 rounded">
-                            <div className="overflow-hidden">
-                              <div className="font-bold truncate">{b.name}</div>
-                              <div className="text-stone-500">{b.phone}</div>
-                              <div className="text-stone-400 truncate" title={b.email}>{b.email}</div>
-                            </div>
-                            <div className="flex gap-1 self-start">
-                              <a href={`tel:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Call"><Phone size={12}/></a>
-                              <a href={`sms:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Text"><MessageCircle size={12}/></a>
-                              <a href={`mailto:${b.email}`} className="p-1 bg-white border hover:bg-emerald-50" title="Email"><Mail size={12}/></a>
-                              <button onClick={() => handleDeleteBooking(b.id)} className="p-1 bg-white border hover:bg-red-50 text-red-600" title="Delete"><Trash2 size={12}/></button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const renderAppointments = () => (
-    <div className="animate-in fade-in duration-500 min-h-screen">
-      <div className="bg-emerald-900 text-white py-16 px-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t.bookingTitle}</h2>
-        <p className="text-emerald-100 max-w-2xl mx-auto">{t.bookingSubtitle}</p>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        {isAdmin && viewMode === 'week' ? (
-           <>
-             <div className="mb-6 flex justify-end">
-               <button 
-                 onClick={() => setViewMode('day')} 
-                 className="flex items-center gap-1 text-xs bg-stone-100 hover:bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold transition-colors"
-               >
-                 <List size={14}/> {t.dayView}
-               </button>
-             </div>
-             {renderWeekView()}
-           </>
-        ) : renderDailyView()}
-      </div>
-    </div>
-  );
-
-  const renderWhatWeTreat = () => (
-    <div className="animate-in fade-in duration-500 py-16 px-6">
-      <SectionHeader title={t.whatWeTreatPage.title} subtitle={t.whatWeTreatPage.subtitle} />
-      <div className="max-w-4xl mx-auto">
-        <div className="grid gap-4">
-            {t.whatWeTreatPage.list.map((item, i) => (
-                <div key={i} className="flex items-start gap-4 p-4 bg-stone-50 rounded-lg border border-stone-100 hover:border-emerald-200 transition-colors">
-                    <div className="mt-1 text-emerald-600 shrink-0">
-                        <CheckCircle2 size={20} />
-                    </div>
-                    <p className="text-stone-700 leading-relaxed">{item}</p>
-                </div>
-            ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const getServiceIcon = (index) => {
-    if (index % 4 === 0) return <Leaf size={32} />;
-    if (index % 4 === 1) return <Activity size={32} />;
-    if (index % 4 === 2) return <Heart size={32} />;
-    return <Star size={32} />;
-  };
-
-  const renderServices = () => (
-    <div className="animate-in fade-in duration-500 py-16 px-6">
-      <SectionHeader title={t.servicesPage.title} subtitle={t.servicesPage.subtitle} />
-      <div className="max-w-4xl mx-auto grid gap-8">
-        {t.servicesPage.list.map((s, i) => (
-          <div key={i} className="flex flex-col md:flex-row gap-6 items-start bg-white p-6 border-b border-stone-100 last:border-0">
-             <div className="w-16 h-16 bg-emerald-50 flex items-center justify-center text-emerald-800 shrink-0 rounded-sm">
-                {s.title.includes('Tuina') ? <HelpingHand size={32} /> : getServiceIcon(i)}
-             </div>
-             <div>
-               <h3 className="text-xl font-serif font-bold text-emerald-900 mb-2">{s.title}</h3>
-               <p className="text-stone-600 leading-relaxed">{s.desc}</p>
-             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
   const renderAbout = () => (
     <div className="animate-in fade-in duration-500 py-16 px-6">
       <div className="max-w-4xl mx-auto">
         <SectionHeader title={t.aboutPage.title} />
-        <div className="flex flex-col md:flex-row gap-12 items-center">
-           <div className="md:w-1/2">
-              <div className="aspect-square bg-stone-200 relative overflow-hidden">
-                 <div className="absolute inset-0 bg-emerald-900/10"></div>
-                 <div className="absolute inset-0 flex items-center justify-center text-emerald-900/20">
-                    <MapPin size={64} />
-                 </div>
-              </div>
+        
+        {/* Main Content Area: Three Columns on Desktop, One Column on Mobile */}
+        <div className="flex flex-col lg:flex-row gap-12 items-start">
+           
+           {/* Left Column: Headshot (Professional Bio) */}
+           <div className="lg:w-1/4 w-full flex justify-center lg:justify-start">
+             <div className="relative w-48 h-48 lg:w-full lg:h-auto max-w-[250px] aspect-[3/4] overflow-hidden rounded-lg shadow-xl border-4 border-stone-100">
+               <img
+                  src={t.aboutPage.headshot}
+                  alt="Dr. Xiaoming Feng"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/300x400?text=Dr.+Feng"; }}
+                />
+             </div>
            </div>
-           <div className="md:w-1/2 space-y-6 text-stone-600 text-lg leading-relaxed">
-             <p>{t.aboutPage.p1}</p>
+
+           {/* Middle Column: Gallery (Historical Moments) */}
+           <div className="lg:w-1/3 w-full space-y-8">
+            <h3 className="text-xl font-serif font-bold text-emerald-900 border-b border-stone-200 pb-2 mb-4 lg:hidden">
+              Academic Journey
+            </h3>
+            {t.aboutPage.gallery.map((img, index) => (
+             <div key={index} className="group">
+               <div className="relative overflow-hidden rounded-sm shadow-md mb-2 transition-transform duration-300 group-hover:scale-[1.01] hover:shadow-xl">
+                  <img
+                    src={img.src}
+                    alt="Historical photo"
+                    className="w-full h-auto object-cover"
+                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400?text=Image+Not+Found"; }}
+                  />
+               </div>
+               <p className="text-xs text-stone-500 italic text-center font-serif leading-relaxed px-2 whitespace-pre-line border-l-2 border-emerald-100 pl-3 ml-2">
+                 {img.text}
+               </p>
+             </div>
+            ))}
+           </div>
+
+           {/* Right Column: Text Content (Detailed Bio) */}
+           <div className="lg:w-5/12 w-full space-y-6 text-stone-600 text-lg leading-relaxed">
+             <h3 className="text-xl font-serif font-bold text-emerald-900 border-b border-stone-200 pb-2 mb-4 lg:hidden">
+               Biography
+             </h3>
+             <p className="first-letter:text-5xl first-letter:font-serif first-letter:text-emerald-800 first-letter:float-left first-letter:mr-3 first-letter:mt-[-6px]">
+               {t.aboutPage.p1}
+             </p>
              <p>{t.aboutPage.p2}</p>
              <p>{t.aboutPage.p3}</p>
              <p>{t.aboutPage.p4}</p>
              <p>{t.aboutPage.p5}</p>
              <p>{t.aboutPage.p6}</p>
              <p>{t.aboutPage.p7}</p>
-             <div className="flex gap-6 mt-8 pt-8 border-t border-stone-200">
+             
+             {/* Stats Section */}
+             <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-stone-200">
                {t.aboutPage.stats.map((stat, i) => (
-                 <div key={i}>
-                   <div className="text-2xl font-bold text-emerald-800 font-serif">{stat}</div>
+                 <div key={i} className="flex-1 min-w-[100px] text-center p-4 bg-emerald-50 rounded-sm">
+                   <div className="text-xl font-bold text-emerald-800 font-serif">{stat}</div>
                  </div>
                ))}
              </div>
            </div>
+
         </div>
       </div>
     </div>
