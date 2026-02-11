@@ -228,11 +228,11 @@ const TRANSLATIONS = {
         },
         {
           src: "./与2017年诺奖得主Michael Rosbash在2018年哈佛医学院睡眠医学年会.jpg",
-          text: "2017年诺奖得主Michael Rosbash在2018年哈佛医学院睡眠医学年会\nWith Michael Rosbash, 2017 Nobel Prize laureate, at the 2018 Harvard Medical School Sleep Medicine Conference."
+          text: "2017年诺奖得主 Michael Rosbash在2018年哈佛医学院睡眠医学年会\nWith Michael Rosbash, 2017 Nobel Prize laureate, at the 2018 Harvard Medical School Sleep Medicine Conference."
         },
         {
           src: "./与2017年诺奖得主Michael W. Young在2018年哈佛医学院睡眠医学年会.jpg",
-          text: "2017年诺奖得主Michael W. Young在2018年哈佛医学院睡眠医学年会\nWith Michael W. Young, 2017 Nobel Prize laureate, at the 2018 Harvard Medical School Sleep Medicine Conference."
+          text: "2017年诺奖得主 Michael W. Young在2018年哈佛医学院睡眠医学年会\nWith Michael W. Young, 2017 Nobel Prize laureate, at the 2018 Harvard Medical School Sleep Medicine Conference."
         }
       ]
     },
