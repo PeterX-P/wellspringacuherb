@@ -50,6 +50,7 @@ import {
 // --- CONFIGURATION ---
 
 // OPTION 2: COMPATIBLE VERSION (Hardcoded)
+// Use this for local development and if you encounter build errors with import.meta
 const firebaseConfig = {
   apiKey: "AIzaSyBAx0Dle1zLqGvsfnoJNZMWtDOGf_HEDVE",
   authDomain: "website-project-6287f.firebaseapp.com",
@@ -453,46 +454,64 @@ const formatTime12 = (time24) => {
   return `${hour12}:${m} ${suffix}`;
 };
 
-// Safe slot generator using hardcoded ranges to prevent infinite loops
+// Safe slot generator using pre-calculated ranges to prevent infinite loops (The "Nuclear Option")
 const getDailySlots = (dateStr) => {
   const date = parseLocal(dateStr);
   const day = date.getDay(); // 0 = Sun, 6 = Sat
   
   if (day === 0) return []; // Sunday closed
 
-  // Define hardcoded slots for each schedule type
-  // This completely eliminates any risk of infinite loops in while/for logic
-  const slots930to1300 = [
-    "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00"
-  ];
+  // Generate ALL possible 30-minute slots for a 24-hour day
+  const allPossibleSlots = [];
+  for (let h = 0; h < 24; h++) {
+    allPossibleSlots.push(`${h}:00`);
+    allPossibleSlots.push(`${h}:30`);
+  }
 
-  const slots930to1600 = [
-    "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00",
-    "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"
-  ];
+  // Define ranges based on day of week
+  let startHour = 9;
+  let startMinute = 0;
+  let endHour = 16;
+  let endMinute = 0;
 
-  const slots900to1500 = [
-    "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00",
-    "13:30", "14:00", "14:30", "15:00"
-  ];
-
-  // Logic for different days
-  // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-
-  // Monday (1) & Thursday (4): 9:30 AM - 1:00 PM
+  // Monday (1) & Thursday (4): 9:30 AM - 1:00 PM (Last slot at 1:00 PM)
   if (day === 1 || day === 4) {
-    return slots930to1300;
+    startHour = 9;
+    startMinute = 30;
+    endHour = 13;
+    endMinute = 0;
   }
-  // Tuesday (2), Wednesday (3), Friday (5): 9:30 AM - 4:00 PM
+  // Tuesday (2), Wednesday (3), Friday (5): 9:30 AM - 4:00 PM (Last slot at 4:00 PM)
   else if (day === 2 || day === 3 || day === 5) {
-    return slots930to1600;
+    startHour = 9;
+    startMinute = 30;
+    endHour = 16;
+    endMinute = 0;
   }
-  // Saturday (6): 9:00 AM - 3:00 PM
+  // Saturday (6): 9:00 AM - 3:00 PM (Last slot at 3:00 PM)
   else if (day === 6) {
-    return slots900to1500;
+    startHour = 9;
+    startMinute = 0;
+    endHour = 15;
+    endMinute = 0;
   }
 
-  return [];
+  // Filter the master list
+  // This avoids ANY while loops or complex increment logic
+  return allPossibleSlots.filter(slot => {
+    const [hStr, mStr] = slot.split(':');
+    const h = parseInt(hStr, 10);
+    const m = parseInt(mStr, 10);
+
+    // Check if time is >= start time
+    if (h < startHour || (h === startHour && m < startMinute)) return false;
+
+    // Check if time is <= end time
+    // We want to INCLUDE the exact end time slot (e.g. 13:00 is allowed)
+    if (h > endHour || (h === endHour && m > endMinute)) return false;
+
+    return true;
+  });
 };
 
 const timeToMinutes = (timeStr) => {
@@ -570,7 +589,8 @@ export default function App() {
   const [foundBookings, setFoundBookings] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const t = TRANSLATIONS[lang];
+  // DEFENSIVE: Fallback to 'en' if lang is somehow invalid, though useState defaults to 'en'
+  const t = TRANSLATIONS[lang] || TRANSLATIONS['en'];
 
   useEffect(() => {
     signInAnonymously(auth).catch(err => console.error("Auth failed:", err));
