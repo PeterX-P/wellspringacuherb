@@ -44,14 +44,12 @@ import {
   HelpingHand,
   CheckCircle2,
   XCircle,
-  Quote // Re-added Quote, ensuring it's safe
+  Quote
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
 
 // OPTION 2: COMPATIBLE VERSION (Hardcoded)
-// Use this to fix the "import.meta" error in this editor. 
-// It works perfectly on GitHub/Live Site as well.
 const firebaseConfig = {
   apiKey: "AIzaSyBAx0Dle1zLqGvsfnoJNZMWtDOGf_HEDVE",
   authDomain: "website-project-6287f.firebaseapp.com",
@@ -1210,7 +1208,7 @@ export default function App() {
             ))}
         </div>
 
-        {/* Reviews Section - Added Safety Check for reviews existence */}
+        {/* Reviews Section */}
         {t?.servicesPage?.reviews && (
           <div className="border-t border-stone-200 pt-16">
               <h3 className="text-2xl font-serif font-bold text-emerald-900 mb-8 text-center">{t.servicesPage.reviewsTitle}</h3>
