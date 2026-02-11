@@ -412,12 +412,10 @@ const getDailySlots = (dateStr) => {
   let currentHour = startHour;
   let currentMinute = startMinute;
 
-  // Safer loop
-  let safetyCounter = 0;
-  while (safetyCounter < 50) { // Safety break
-    safetyCounter++;
+  // Optimized loop to prevent infinite loops and ensure correct time slots
+  for (let i = 0; i < 50; i++) { // Safety limit of 50 slots per day (more than enough)
     
-    // Check if we've passed the end time
+    // Break if we are past the end time
     if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
       break;
     }
