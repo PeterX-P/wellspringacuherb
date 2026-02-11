@@ -453,73 +453,46 @@ const formatTime12 = (time24) => {
   return `${hour12}:${m} ${suffix}`;
 };
 
-// Generate 30-minute intervals for the day
+// Safe slot generator using hardcoded ranges to prevent infinite loops
 const getDailySlots = (dateStr) => {
   const date = parseLocal(dateStr);
   const day = date.getDay(); // 0 = Sun, 6 = Sat
   
   if (day === 0) return []; // Sunday closed
 
-  const slots = [];
-  
+  // Define hardcoded slots for each schedule type
+  // This completely eliminates any risk of infinite loops in while/for logic
+  const slots930to1300 = [
+    "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00"
+  ];
+
+  const slots930to1600 = [
+    "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00",
+    "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"
+  ];
+
+  const slots900to1500 = [
+    "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00",
+    "13:30", "14:00", "14:30", "15:00"
+  ];
+
   // Logic for different days
   // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-  
-  // Default Hours (Just in case, though all weekdays are covered now)
-  let startHour = 9;
-  let startMinute = 0;
-  let endHour = 16;
-  let endMinute = 0;
 
-  // Monday (1) & Thursday (4): 9:30 AM - 1:00 PM (Last slot at 1:00 PM)
+  // Monday (1) & Thursday (4): 9:30 AM - 1:00 PM
   if (day === 1 || day === 4) {
-    startHour = 9;
-    startMinute = 30;
-    endHour = 13;
-    endMinute = 0;
+    return slots930to1300;
   }
-  // Tuesday (2), Wednesday (3), Friday (5): 9:30 AM - 4:00 PM (Last slot at 4:00 PM)
+  // Tuesday (2), Wednesday (3), Friday (5): 9:30 AM - 4:00 PM
   else if (day === 2 || day === 3 || day === 5) {
-    startHour = 9;
-    startMinute = 30;
-    endHour = 16;
-    endMinute = 0;
+    return slots930to1600;
   }
-  // Saturday (6): 9:00 AM - 3:00 PM (Last slot at 3:00 PM)
+  // Saturday (6): 9:00 AM - 3:00 PM
   else if (day === 6) {
-    startHour = 9;
-    startMinute = 0;
-    endHour = 15;
-    endMinute = 0;
+    return slots900to1500;
   }
 
-  // Iterate from start time until we hit or pass the end time
-  let currentHour = startHour;
-  let currentMinute = startMinute;
-
-  // We use a fixed loop to prevent any possibility of infinite loops
-  // Max possible slots per day is 48 (24 * 2), so 100 is a safe upper bound
-  for (let i = 0; i < 100; i++) {
-    // Condition to STOP:
-    // If current time is strictly AFTER the end time, break.
-    // e.g. End is 13:00. Current is 13:30 -> Break. Current is 13:00 -> Keep (allow last slot).
-    if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
-      break;
-    }
-    
-    // Add the slot string
-    const timeString = `${currentHour}:${currentMinute === 0 ? '00' : currentMinute}`;
-    slots.push(timeString);
-
-    // Increment time by 30 mins
-    currentMinute += 30;
-    if (currentMinute >= 60) {
-      currentMinute = 0;
-      currentHour += 1;
-    }
-  }
-
-  return slots;
+  return [];
 };
 
 const timeToMinutes = (timeStr) => {
@@ -1209,7 +1182,7 @@ export default function App() {
             ))}
         </div>
 
-        {/* Reviews Section */}
+        {/* Reviews Section - Added Safety Check for reviews existence */}
         {t?.servicesPage?.reviews && (
           <div className="border-t border-stone-200 pt-16">
               <h3 className="text-2xl font-serif font-bold text-emerald-900 mb-8 text-center">{t.servicesPage.reviewsTitle}</h3>
