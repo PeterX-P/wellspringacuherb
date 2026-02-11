@@ -50,7 +50,6 @@ import {
 // --- CONFIGURATION ---
 
 // OPTION 2: COMPATIBLE VERSION (Hardcoded)
-// Use this for local development and if you encounter build errors with import.meta
 const firebaseConfig = {
   apiKey: "AIzaSyBAx0Dle1zLqGvsfnoJNZMWtDOGf_HEDVE",
   authDomain: "website-project-6287f.firebaseapp.com",
@@ -454,21 +453,19 @@ const formatTime12 = (time24) => {
   return `${hour12}:${m} ${suffix}`;
 };
 
-// Safe slot generator using pre-calculated ranges to prevent infinite loops (The "Nuclear Option")
+// Generate 30-minute intervals for the day
 const getDailySlots = (dateStr) => {
   const date = parseLocal(dateStr);
   const day = date.getDay(); // 0 = Sun, 6 = Sat
   
   if (day === 0) return []; // Sunday closed
 
-  // Generate ALL possible 30-minute slots for a 24-hour day
-  const allPossibleSlots = [];
-  for (let h = 0; h < 24; h++) {
-    allPossibleSlots.push(`${h}:00`);
-    allPossibleSlots.push(`${h}:30`);
-  }
-
-  // Define ranges based on day of week
+  const slots = [];
+  
+  // Logic for different days
+  // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  
+  // Default Hours (Just in case, though all weekdays are covered now)
   let startHour = 9;
   let startMinute = 0;
   let endHour = 16;
@@ -496,22 +493,30 @@ const getDailySlots = (dateStr) => {
     endMinute = 0;
   }
 
-  // Filter the master list
-  // This avoids ANY while loops or complex increment logic
-  return allPossibleSlots.filter(slot => {
-    const [hStr, mStr] = slot.split(':');
-    const h = parseInt(hStr, 10);
-    const m = parseInt(mStr, 10);
+  // Iterate from start time until we hit or pass the end time
+  // Using a FOR loop with a hard limit to absolutely prevent infinite loops
+  let currentHour = startHour;
+  let currentMinute = startMinute;
 
-    // Check if time is >= start time
-    if (h < startHour || (h === startHour && m < startMinute)) return false;
+  for (let i = 0; i < 50; i++) { // Max 50 slots per day is plenty
+    // Condition to STOP:
+    // If current time is strictly AFTER the end time
+    if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
+      break;
+    }
+    
+    // Add slot
+    slots.push(`${currentHour}:${currentMinute === 0 ? '00' : currentMinute}`);
 
-    // Check if time is <= end time
-    // We want to INCLUDE the exact end time slot (e.g. 13:00 is allowed)
-    if (h > endHour || (h === endHour && m > endMinute)) return false;
+    // Increment by 30 mins
+    currentMinute += 30;
+    if (currentMinute >= 60) {
+      currentMinute = 0;
+      currentHour += 1;
+    }
+  }
 
-    return true;
-  });
+  return slots;
 };
 
 const timeToMinutes = (timeStr) => {
