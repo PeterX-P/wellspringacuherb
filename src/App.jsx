@@ -43,13 +43,15 @@ import {
   Mail,
   HelpingHand,
   CheckCircle2,
-  XCircle 
+  XCircle,
+  Quote
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
 
 // OPTION 1: SECURE VERSION (For GitHub Secrets)
-// UNCOMMENT this block and DELETE the "OPTION 2" block below if using GitHub Secrets.
+// If you want to use the secrets defined in your deploy.yml, 
+// UNCOMMENT this block and DELETE the "OPTION 2" block below.
 /*
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -62,7 +64,9 @@ const firebaseConfig = {
 };
 */
 
-// OPTION 2: COMPATIBLE VERSION (Hardcoded for local/preview)
+// OPTION 2: COMPATIBLE VERSION (Hardcoded)
+// Use this to fix the "import.meta" error in this editor. 
+// It works perfectly on GitHub/Live Site as well.
 const firebaseConfig = {
   apiKey: "AIzaSyBAx0Dle1zLqGvsfnoJNZMWtDOGf_HEDVE",
   authDomain: "website-project-6287f.firebaseapp.com",
@@ -148,6 +152,55 @@ const TRANSLATIONS = {
         { title: "Cupping", desc: "Improve blood flow and relaxation with traditional vacuum therapy." },
         { title: "Herbal Medicine", desc: "Custom herbal formulas tailored to your specific constitution." },
         { title: "Tuina (Chinese Therapeutic Massage)", desc: "Restore balance through hands-on techniques that relax muscles, improve circulation, and support the body’s natural healing process." }
+      ],
+      reviewsTitle: "Patient Reviews",
+      reviews: [
+        {
+            name: "Sally Niu",
+            date: "July 2025",
+            text: "I've been seeing Ruthy for acupuncture and have noticed great improvements in my eye dryness, neck and shoulder tension, and overall well-being. She's incredibly attentive and really listens to her patients' needs. Her treatments are gentle, effective, and always leave me feeling more balanced and relaxed. Highly recommend her for anyone looking for natural, holistic healing."
+        },
+        {
+            name: "Jun Yang",
+            date: "August 2025",
+            title: "Highly Recommend Ruthy!",
+            text: "I've been seeing Ruthy since 2023 for a variety of issues, and her skill is truly amazing. She's effectively treated my back pain and urine leaking after pregnancy, as well as swollen legs. All of her treatments have been incredibly effective. My back pain is completely gone, and my urine leaking is now under control. Whenever I have swollen feet, Ruthy is the first person I go to!"
+        },
+        {
+            name: "Jenny DoHa",
+            date: "July 2025",
+            text: "My mother has been seen by Ruthy for 8 sessions and she has been amazing!! My mom has had what her PCP calls \"essential tremors\" for years and we went to do tests and get labs but everything comes back as normal and they had no explanation as to why my mom's hands have been trembling/shaking. My mom has also tried acupuncture at other locations for about half a year to a year and they did not help. It got to the point where at times her tremors got so bad she could not hold chopsticks. Once we tried Acupuncture with Ruthy, after only 2 sessions there was noticeable major improvements to my mom's tremors. Now after 8 sessions, her tremors are barely there and does not interfere in her daily activities. Ruthy is a very thorough and experienced acupuncturist who has been the only one that has been able to improve my mom's \"essential tremors\" I would highly recommend her to anyone seeking acupuncture therapy. In fact, we have already referred a few friends to come see her to improve their health conditions and they also find her helpful too! The facility itself is very clean and sanitary and staff are all very friendly."
+        },
+        {
+            name: "C J",
+            date: "July 2025",
+            text: "I have been seeing Dr. Feng every week for 3 months and feel much better. The treatment I received shows excellent effect. I felt tired and chest tightness for several months and even went to the emergency room because of chest pressure and difficult breathing. All checkups in the hospital said that I was ok and medical-wise had no concern. I went to Dr. Feng seeking for the traditional Chinese physical therapy as to making qi and blood flow unobstructed. The treatment result is amazing. I am Normal now. Many thanks to Dr. Feng. By the side, one needle (Acupuncture) heals the pain that I had for decades. I always had a little pain spot on the upper right tummy area since I gave birth. Dr. Feng listened to my complaint and gave the Acupuncture treatment. The magic just happened right after. I highly recommend Dr. Feng to anyone who is looking for help for any healthy reason."
+        },
+        {
+            name: "Dynysse Byrne",
+            date: "May 2025",
+            text: "I have been seeing Ruthy now for about a year, and I’ve never felt better. When she says tell me everything that hurts she makes it all feel better. It’s very neat a clean and I will refer all my friends to the Acupuncture clinic. Thanks again for all the tips and care you have given me."
+        },
+        {
+            name: "Caitlin Murray",
+            date: "August 2025",
+            text: "Been treating plantar fasciitis here and had great result from Ruthy. She is very thorough and really treats the whole body."
+        },
+        {
+            name: "Hongda Yin",
+            date: "September 2025",
+            text: "Ruthy cured my muscle strain problem with in two hours. She has amazing skills and over 15 years experience!"
+        },
+        {
+            name: "Juliet Marquez",
+            date: "February 2025",
+            text: "Excellent in maintaining my over all health regarding my Rheumatoid Arthritis! Have recommended to others too Ruthie & Sun fantastic therapist!"
+        },
+        {
+            name: "Peter Souhleris",
+            date: "April 2025",
+            text: "Ruthy was amazing. Her knowledge is impressive. I was Refered to come here and I am extremely grateful I did. I have had several visits here and it’s almost miraculous on how I feel when I leave. It’s a little far for me about an hr drive from where I live , but well worth it. I will make this a health routine. Thanks again Ruthy for your knowledge and amazing treatments."
+        }
       ]
     },
     whatWeTreatPage: {
@@ -277,6 +330,55 @@ const TRANSLATIONS = {
         { title: "拔罐療法", desc: "利用真空療法促進血液循環和肌肉放鬆。" },
         { title: "中藥調理", desc: "根據您的體質定制的草本配方。" },
         { title: "中医推拿疗法", desc: "通過手法操作放鬆肌肉、促進血液循環，幫助恢復身體平衡，支持身體的自然修復過程。" }
+      ],
+      reviewsTitle: "患者評價",
+      reviews: [
+        {
+            name: "Sally Niu",
+            date: "2025年7月",
+            text: "我一直在接受Ruthy的針灸治療，明顯感覺眼睛乾澀、頸肩酸痛以及整體健康狀況都有了顯著改善。她非常細心，總是認真傾聽患者的需求。她的治療手法輕柔有效，每次治療後都讓我感覺身心更平衡放鬆。強烈推薦她給所有尋求自然療法和整體療法的人。"
+        },
+        {
+            name: "Jun Yang",
+            date: "2025年8月",
+            title: "強烈推薦Ruthy！",
+            text: "我從2023年就開始找Ruthy治療各種問題，她的技術真的很棒。她有效地治療了我產後的背痛、漏尿以及腿部腫脹。她所有的治療都非常有效。我的背痛完全消失了，漏尿也得到了控制。每當我的腳腫起來，Ruthy都是我第一個去找的人！"
+        },
+        {
+            name: "Jenny DoHa",
+            date: "2025年7月",
+            text: "我母親已經接受了Ruthy的8次治療，效果真是太棒了！我母親多年來一直患有她的家庭醫生所說的“特發性震顫”，我們做了很多檢查和化驗，但結果都顯示正常，醫生也無法解釋我母親的手為什麼會顫抖。我母親也曾在其他地方嘗試過針灸，持續了大約半年到一年，但都沒有效果。有時她的震顫非常嚴重，甚至連筷子都拿不住。後來，我們嘗試了Ruthy的針灸治療，僅僅兩次治療後，我母親的震顫就有了顯著的改善。現在，經過8次治療，她的震顫幾乎消失了，完全不影響她的日常生活。Ruthy是一位非常細緻且經驗豐富的針灸師，她是唯一一位能夠改善我母親「特發性震顫」症狀的醫生。我強烈推薦她給任何尋求針灸治療的人。事實上，我們已經推薦了幾位朋友去找她改善健康狀況，他們也都覺得她很有幫助！診所環境非常乾淨衛生，所有工作人員都非常友善。"
+        },
+        {
+            name: "C J",
+            date: "2025年7月",
+            text: "我每週都去看丰醫生，已經三個月了，感覺好多了。我接受的治療效果非常好。幾個月來，我一直感到疲倦和胸悶，甚至因為胸悶和呼吸困難而去了急診室。醫院的所有檢查都說我沒事，醫學方面也沒問題。我去見丰醫生，尋求傳統的中醫物理療法，使氣血流通暢通。治療效果非常驚人。我現在正常了。非常感謝丰醫師。另外，一針（針灸）治癒了我幾十年的疼痛。自從我生完小孩後，右上腹部就一直有個小痛點。丰醫生聽取了我的抱怨，並給了我針灸治療。奇蹟就在之後發生了。我強烈推薦丰醫生給任何因健康原因尋求幫助的人。"
+        },
+        {
+            name: "Dynysse Byrne",
+            date: "2025年5月",
+            text: "我接受Ruthy的治療已經一年了，感覺從未如此好。她總是讓我把所有疼痛都告訴我，然後她就能讓我感覺好多了。診所環境非常整潔乾淨，我會把針灸診所推薦給我所有的朋友。再次感謝您給我的所有建議和悉心照料。 ❤️"
+        },
+        {
+            name: "Caitlin Murray",
+            date: "2025年8月",
+            text: "我一直在這裡治療足底筋膜炎，Ruthy 的治療效果非常好。她非常細緻，而且真的能治療全身。"
+        },
+        {
+            name: "Hongda Yin",
+            date: "2025年9月",
+            text: "Ruthy 兩小時就治好了我的肌肉拉傷。她技術一流，經驗超過15年！"
+        },
+        {
+            name: "Juliet Marquez",
+            date: "2025年2月",
+            text: "在調理我的類風濕性關節炎整體健康方面效果極佳！已推薦給其他人，Ruthie 和 Sun 都是非常棒的治療師！"
+        },
+        {
+            name: "Peter Souhleris",
+            date: "2025年4月",
+            text: "Ruthy 太棒了！她的知識令人印象深刻。我是被推薦來這裡的，我非常感激。我已經來過這裡好幾次了，離開時的感覺簡直不可思議。雖然離我住的地方有點遠，大約一個小時的車程，但絕對值得。我會把這當作我的日常保健計劃。再次感謝 Ruthy 的知識和出色的治療。"
+        }
       ]
     },
     whatWeTreatPage: {
@@ -412,10 +514,12 @@ const getDailySlots = (dateStr) => {
   let currentHour = startHour;
   let currentMinute = startMinute;
 
-  // Optimized loop to prevent infinite loops and ensure correct time slots
-  for (let i = 0; i < 50; i++) { // Safety limit of 50 slots per day (more than enough)
+  // Safer loop
+  let safetyCounter = 0;
+  while (safetyCounter < 50) { // Safety break
+    safetyCounter++;
     
-    // Break if we are past the end time
+    // Check if we've passed the end time
     if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
       break;
     }
@@ -882,338 +986,51 @@ export default function App() {
     );
   };
 
-  const renderDailyView = () => {
-    const dailySlots = getDailySlots(selectedDate);
-    const isAllowedDate = isDateAllowed(selectedDate);
-
-    return (
-      <div className="flex flex-col md:flex-row gap-12">
-        {/* Calendar Sidebar */}
-        <div className="md:w-1/3">
-          <div className="bg-white p-6 shadow-lg border border-stone-100 sticky top-24">
-            <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-stone-100 pb-2">
-              <Calendar size={16} /> {t.selectDate}
-            </h3>
-            
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronLeft size={20}/></button>
-                <span className="font-bold text-stone-700">
-                  {viewMonth.toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { year: 'numeric', month: 'long' })}
-                </span>
-                <button onClick={() => changeMonth(1)} className="p-1 hover:bg-stone-100 rounded-full text-stone-500"><ChevronRight size={20}/></button>
-              </div>
-              
-              <div className="grid grid-cols-7 text-center mb-2">
-                {(lang === 'en' ? ['S','M','T','W','T','F','S'] : ['日','一','二','三','四','五','六']).map(d => (
-                  <div key={d} className="text-xs font-bold text-stone-400">{d}</div>
-                ))}
-              </div>
-              
-              <div className="grid grid-cols-7 gap-1">
-                {(() => {
-                  const year = viewMonth.getFullYear();
-                  const month = viewMonth.getMonth();
-                  const firstDay = new Date(year, month, 1);
-                  const lastDay = new Date(year, month + 1, 0);
-                  const startDay = firstDay.getDay();
-                  const slots = [];
-                  for(let i=0; i<startDay; i++) slots.push(<div key={`empty-${i}`} />);
-                  for(let i=1; i<=lastDay.getDate(); i++) {
-                    const date = new Date(year, month, i);
-                    const dateStr = formatDate(date);
-                    const isSelected = dateStr === selectedDate;
-                    const isPast = date < new Date(new Date().setHours(0,0,0,0));
-                    
-                    const isAllowed = isDateAllowed(dateStr); 
-
-                    // Check for appointments on this day (for highlighting)
-                    // Modified: Only check if user is admin
-                    const hasAppointments = appointments.some(a => a.date === dateStr && a.type === 'booking');
-                    const shouldHighlight = isAdmin && hasAppointments;
-                    
-                    slots.push(
-                      <button
-                        key={dateStr}
-                        onClick={() => !isPast && isAllowed && setSelectedDate(dateStr)}
-                        disabled={isPast || !isAllowed}
-                        className={`h-9 w-9 mx-auto rounded-full flex items-center justify-center text-sm transition-all ${
-                          isSelected ? 'bg-emerald-800 text-white font-bold' : 
-                          shouldHighlight ? 'font-extrabold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 ring-1 ring-emerald-200' : 
-                          'hover:bg-emerald-50 text-stone-600'
-                        } ${isPast || !isAllowed ? 'text-stone-300 cursor-not-allowed opacity-50 hover:bg-transparent' : ''}`}
-                      >
-                        {i}
-                      </button>
-                    );
-                  }
-                  return slots;
-                })()}
-              </div>
-            </div>
-
-            <div className="bg-emerald-50 p-4 rounded-sm border border-emerald-100">
-              <div className="text-xs text-emerald-800 font-bold uppercase mb-2">Selected Date</div>
-              <div className="text-xl font-serif font-bold text-emerald-900">
-                {parseLocal(selectedDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'zh-TW', { weekday: 'long', month: 'long', day: 'numeric' })}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="md:w-2/3">
-          <div className="flex justify-between items-center mb-6 border-b border-stone-200 pb-2">
-             <h3 className="text-lg font-bold text-emerald-900 uppercase tracking-wide text-sm">
-                Available Times <span className="text-xs normal-case text-stone-500 font-normal ml-2">EST</span>
-             </h3>
-             {isAdmin && (
-               <div className="flex gap-2">
-                 <button 
-                   onClick={() => setIsBlockRangeOpen(true)} 
-                   className="flex items-center gap-1 text-xs bg-red-50 hover:bg-red-100 text-red-900 px-3 py-1 rounded-full font-bold transition-colors"
-                 >
-                   <Ban size={14}/> {t.blockRange}
-                 </button>
-                 <button 
-                   onClick={() => setViewMode('week')} 
-                   className="flex items-center gap-1 text-xs bg-stone-100 hover:bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold transition-colors"
-                 >
-                   <Grid size={14}/> {t.weekView}
-                 </button>
-               </div>
-             )}
-          </div>
-          
-          {dailySlots.length === 0 ? (
-            <div className="text-center py-12 text-stone-500 bg-stone-50 border border-dashed border-stone-200">
-              <Clock className="mx-auto mb-2 text-stone-400" />
-              <p>Closed on Sundays. Please select another date.</p>
-            </div>
-          ) : !isAllowedDate && !isAdmin ? (
-             <div className="text-center py-12 text-red-500 bg-red-50 border border-dashed border-red-200">
-               <Calendar className="mx-auto mb-2 opacity-50" />
-               <p>Booking not yet open for this date.</p>
-             </div>
-          ) : (
-            <div className="space-y-4">
-              {dailySlots.map((slot) => {
-                const { isBlocked, remaining, bookings } = getSlotData(selectedDate, slot);
-                const now = new Date();
-                const isToday = selectedDate === formatDate(now);
-                const [h, m] = slot.split(':').map(Number);
-                const slotDate = new Date();
-                slotDate.setHours(h, m, 0, 0);
-                const isPastTime = isToday && slotDate < now;
-                const isFull = remaining === 0;
-
-                // Hide unavailable slots for patients (booked, blocked, or past)
-                if (!isAdmin && (isBlocked || isFull || isPastTime)) {
-                  return null;
-                }
-                
-                return (
-                  <div key={slot} className="bg-white border border-stone-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-emerald-200 transition-colors">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-1">
-                        <Clock size={18} className="text-emerald-700" />
-                        <span className="text-xl font-serif font-bold text-stone-800">{slot}</span>
-                      </div>
-                      <div className="flex gap-2 text-xs font-bold uppercase tracking-wider">
-                        {isBlocked ? (
-                          <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.blocked}</span>
-                        ) : isPastTime ? (
-                          <span className="text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{t.past}</span>
-                        ) : isFull ? (
-                          <span className="text-red-500 bg-red-50 px-2 py-0.5 rounded">{t.full}</span>
-                        ) : (
-                          <span className="text-emerald-600 px-2 py-0.5 rounded"></span>
-                        )}
-                      </div>
-                    </div>
-
-                    {!isAdmin ? (
-                      <button
-                        onClick={() => handleBookClick(slot)}
-                        disabled={isFull || isBlocked || isPastTime}
-                        className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-all min-w-[140px] ${
-                          isFull || isBlocked || isPastTime
-                            ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-                            : 'bg-emerald-800 text-white hover:bg-emerald-900 shadow-sm'
-                        }`}
-                      >
-                        {isBlocked || isFull || isPastTime ? 'Unavailable' : 'Select'}
-                      </button>
-                    ) : (
-                      <div className="flex gap-2">
-                        <button onClick={() => toggleBlockSlot(selectedDate, slot, isBlocked)} className="text-xs bg-stone-200 hover:bg-stone-300 px-3 py-2 font-bold uppercase">{isBlocked ? t.unblock : 'Block'}</button>
-                      </div>
-                    )}
-                    
-                    {isAdmin && bookings.length > 0 && (
-                      <div className="w-full sm:w-auto mt-2 sm:mt-0 pt-2 sm:pt-0 sm:border-l sm:border-stone-100 sm:pl-4">
-                        {bookings.map(b => (
-                          <div key={b.id} className="text-xs mb-1 flex items-center justify-between gap-2 bg-stone-50 p-1.5 rounded">
-                            <div className="overflow-hidden">
-                              <div className="font-bold truncate">{b.name}</div>
-                              <div className="text-stone-500">{b.phone}</div>
-                              <div className="text-stone-400 truncate" title={b.email}>{b.email}</div>
-                            </div>
-                            <div className="flex gap-1 self-start">
-                              <a href={`tel:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Call"><Phone size={12}/></a>
-                              <a href={`sms:${b.phone}`} className="p-1 bg-white border hover:bg-emerald-50" title="Text"><MessageCircle size={12}/></a>
-                              <a href={`mailto:${b.email}`} className="p-1 bg-white border hover:bg-emerald-50" title="Email"><Mail size={12}/></a>
-                              <button onClick={() => handleDeleteBooking(b.id)} className="p-1 bg-white border hover:bg-red-50 text-red-600" title="Delete"><Trash2 size={12}/></button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const renderAppointments = () => (
-    <div className="animate-in fade-in duration-500 min-h-screen">
-      <div className="bg-emerald-900 text-white py-16 px-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t.bookingTitle}</h2>
-        <p className="text-emerald-100 max-w-2xl mx-auto">{t.bookingSubtitle}</p>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        {isAdmin && viewMode === 'week' ? (
-           <>
-             <div className="mb-6 flex justify-end">
-               <button 
-                 onClick={() => setViewMode('day')} 
-                 className="flex items-center gap-1 text-xs bg-stone-100 hover:bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold transition-colors"
-               >
-                 <List size={14}/> {t.dayView}
-               </button>
-             </div>
-             {renderWeekView()}
-           </>
-        ) : renderDailyView()}
-      </div>
-    </div>
-  );
-
-  const renderWhatWeTreat = () => (
-    <div className="animate-in fade-in duration-500 py-16 px-6">
-      <SectionHeader title={t.whatWeTreatPage.title} subtitle={t.whatWeTreatPage.subtitle} />
-      <div className="max-w-4xl mx-auto">
-        <div className="grid gap-4">
-            {t.whatWeTreatPage.list.map((item, i) => (
-                <div key={i} className="flex items-start gap-4 p-4 bg-stone-50 rounded-lg border border-stone-100 hover:border-emerald-200 transition-colors">
-                    <div className="mt-1 text-emerald-600 shrink-0">
-                        <CheckCircle2 size={20} />
-                    </div>
-                    <p className="text-stone-700 leading-relaxed">{item}</p>
-                </div>
-            ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const getServiceIcon = (index) => {
-    if (index % 4 === 0) return <Leaf size={32} />;
-    if (index % 4 === 1) return <Activity size={32} />;
-    if (index % 4 === 2) return <Heart size={32} />;
-    return <Star size={32} />;
-  };
-
   const renderServices = () => (
     <div className="animate-in fade-in duration-500 py-16 px-6">
       <SectionHeader title={t.servicesPage.title} subtitle={t.servicesPage.subtitle} />
-      <div className="max-w-4xl mx-auto grid gap-8">
-        {t.servicesPage.list.map((s, i) => (
-          <div key={i} className="flex flex-col md:flex-row gap-6 items-start bg-white p-6 border-b border-stone-100 last:border-0">
-             <div className="w-16 h-16 bg-emerald-50 flex items-center justify-center text-emerald-800 shrink-0 rounded-sm">
-                {s.title.includes('Tuina') ? <HelpingHand size={32} /> : getServiceIcon(i)}
-             </div>
-             <div>
-               <h3 className="text-xl font-serif font-bold text-emerald-900 mb-2">{s.title}</h3>
-               <p className="text-stone-600 leading-relaxed">{s.desc}</p>
-             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderAbout = () => (
-    <div className="animate-in fade-in duration-500 py-16 px-6">
-      <div className="max-w-4xl mx-auto">
-        <SectionHeader title={t.aboutPage.title} />
-        
-        {/* Main Content Area: Three Columns on Desktop, One Column on Mobile */}
-        <div className="flex flex-col lg:flex-row gap-12 items-start">
-           
-           {/* Left Column: Headshot (Professional Bio) */}
-           <div className="lg:w-1/4 w-full flex justify-center lg:justify-start">
-             <div className="relative w-48 h-48 lg:w-full lg:h-auto max-w-[250px] aspect-[3/4] overflow-hidden rounded-lg shadow-xl border-4 border-stone-100">
-               <img
-                  src={t.aboutPage.headshot}
-                  alt="Dr. Xiaoming Feng"
-                  className="w-full h-full object-cover"
-                  onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/300x400?text=Dr.+Feng"; }}
-                />
-             </div>
-           </div>
-
-           {/* Middle Column: Gallery (Historical Moments) */}
-           <div className="lg:w-1/3 w-full space-y-8">
-            <h3 className="text-xl font-serif font-bold text-emerald-900 border-b border-stone-200 pb-2 mb-4 lg:hidden">
-              Academic Journey
-            </h3>
-            {t.aboutPage.gallery.map((img, index) => (
-             <div key={index} className="group">
-               <div className="relative overflow-hidden rounded-sm shadow-md mb-2 transition-transform duration-300 group-hover:scale-[1.01] hover:shadow-xl">
-                  <img
-                    src={img.src}
-                    alt="Historical photo"
-                    className="w-full h-auto object-cover"
-                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400?text=Image+Not+Found"; }}
-                  />
-               </div>
-               <p className="text-xs text-stone-500 italic text-center font-serif leading-relaxed px-2 whitespace-pre-line border-l-2 border-emerald-100 pl-3 ml-2">
-                 {img.text}
-               </p>
-             </div>
+      <div className="max-w-4xl mx-auto space-y-16">
+        <div className="grid gap-8">
+            {t.servicesPage.list.map((s, i) => (
+            <div key={i} className="flex flex-col md:flex-row gap-6 items-start bg-white p-6 border-b border-stone-100 last:border-0">
+                <div className="w-16 h-16 bg-emerald-50 flex items-center justify-center text-emerald-800 shrink-0 rounded-sm">
+                    {s.title.includes('Tuina') || s.title.includes('推拿') ? <HelpingHand size={32} /> : getServiceIcon(i)}
+                </div>
+                <div>
+                <h3 className="text-xl font-serif font-bold text-emerald-900 mb-2">{s.title}</h3>
+                <p className="text-stone-600 leading-relaxed">{s.desc}</p>
+                </div>
+            </div>
             ))}
-           </div>
+        </div>
 
-           {/* Right Column: Text Content (Detailed Bio) */}
-           <div className="lg:w-5/12 w-full space-y-6 text-stone-600 text-lg leading-relaxed">
-             <h3 className="text-xl font-serif font-bold text-emerald-900 border-b border-stone-200 pb-2 mb-4 lg:hidden">
-               Biography
-             </h3>
-             <p className="first-letter:text-5xl first-letter:font-serif first-letter:text-emerald-800 first-letter:float-left first-letter:mr-3 first-letter:mt-[-6px]">
-               {t.aboutPage.p1}
-             </p>
-             <p>{t.aboutPage.p2}</p>
-             <p>{t.aboutPage.p3}</p>
-             <p>{t.aboutPage.p4}</p>
-             <p>{t.aboutPage.p5}</p>
-             <p>{t.aboutPage.p6}</p>
-             <p>{t.aboutPage.p7}</p>
-             
-             {/* Stats Section */}
-             <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-stone-200">
-               {t.aboutPage.stats.map((stat, i) => (
-                 <div key={i} className="flex-1 min-w-[100px] text-center p-4 bg-emerald-50 rounded-sm">
-                   <div className="text-xl font-bold text-emerald-800 font-serif">{stat}</div>
-                 </div>
-               ))}
-             </div>
-           </div>
-
+        {/* Reviews Section */}
+        <div className="border-t border-stone-200 pt-16">
+            <h3 className="text-2xl font-serif font-bold text-emerald-900 mb-8 text-center">{t.servicesPage.reviewsTitle}</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+                {t.servicesPage.reviews.map((review, i) => (
+                    <div key={i} className="bg-stone-50 p-6 rounded-lg border border-stone-100 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex items-center gap-2 mb-3">
+                             <div className="flex text-emerald-500">
+                                <Star size={14} fill="currentColor" />
+                                <Star size={14} fill="currentColor" />
+                                <Star size={14} fill="currentColor" />
+                                <Star size={14} fill="currentColor" />
+                                <Star size={14} fill="currentColor" />
+                             </div>
+                             <span className="text-xs text-stone-400 font-bold uppercase tracking-wider ml-auto">{review.date}</span>
+                        </div>
+                        {review.title && <h4 className="font-bold text-emerald-900 mb-2">{review.title}</h4>}
+                        <div className="relative">
+                            <Quote size={20} className="absolute -top-1 -left-2 text-emerald-100 transform -scale-x-100" />
+                            <p className="text-stone-600 text-sm leading-relaxed mb-4 pl-4 relative z-10">{review.text}</p>
+                        </div>
+                        <div className="mt-auto border-t border-stone-200 pt-3">
+                            <p className="font-bold text-emerald-800 text-sm">{review.name}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
       </div>
     </div>
