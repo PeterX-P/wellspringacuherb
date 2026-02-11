@@ -493,24 +493,25 @@ const getDailySlots = (dateStr) => {
     endMinute = 0;
   }
 
-  // Generate slots
+  // Iterate from start time until we hit or pass the end time
   let currentHour = startHour;
   let currentMinute = startMinute;
 
-  // Safer loop - prevents infinite loops and ensures loop terminates properly
-  for (let i = 0; i < 50; i++) { 
-    // Check end condition: Strictly AFTER the end time
-    // If end is 13:00, we allow 13:00 to be generated, then stop.
-    // Logic: if current > endHour OR (current == endHour && currentMinute > endMinute) -> BREAK
-    
+  // We use a fixed loop to prevent any possibility of infinite loops
+  // Max possible slots per day is 48 (24 * 2), so 100 is a safe upper bound
+  for (let i = 0; i < 100; i++) {
+    // Condition to STOP:
+    // If current time is strictly AFTER the end time, break.
+    // e.g. End is 13:00. Current is 13:30 -> Break. Current is 13:00 -> Keep (allow last slot).
     if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
       break;
     }
     
-    // Add slot
-    slots.push(`${currentHour}:${currentMinute === 0 ? '00' : currentMinute}`);
+    // Add the slot string
+    const timeString = `${currentHour}:${currentMinute === 0 ? '00' : currentMinute}`;
+    slots.push(timeString);
 
-    // Increment by 30 mins
+    // Increment time by 30 mins
     currentMinute += 30;
     if (currentMinute >= 60) {
       currentMinute = 0;
@@ -979,7 +980,7 @@ export default function App() {
         <div className="md:w-1/3">
           <div className="bg-white p-6 shadow-lg border border-stone-100 sticky top-24">
             <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-stone-100 pb-2">
-              <Calendar size={16} /> {t.selectDate}
+              <Calendar size={16} /> {t?.selectDate}
             </h3>
             
             <div className="mb-6">
@@ -1431,9 +1432,9 @@ export default function App() {
         {currentPage === 'appointments' && renderAppointments()}
         {currentPage === 'testimonials' && (
            <div className="animate-in fade-in duration-500 py-16 px-6">
-             <SectionHeader title={t.testimonialsPage.title} />
+             <SectionHeader title={t?.testimonialsPage?.title} subtitle={t?.testimonialsPage?.subtitle} />
              <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-               {t.testimonialsPage.list.map((item, i) => (
+               {t?.testimonialsPage?.list?.map((item, i) => (
                  <div key={i} className="bg-stone-50 p-8 border border-stone-100">
                    <div className="text-emerald-800 mb-4 flex"><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/></div>
                    <p className="text-stone-700 italic mb-4 font-serif text-lg">"{item.text}"</p>
