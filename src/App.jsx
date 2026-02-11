@@ -220,7 +220,7 @@ const TRANSLATIONS = {
         },
         {
           src: "./与杨氏针灸第二代徐明光医生请李鼎先生为杨氏针灸荟萃题字.jpg",
-          text: "与请李鼎先生为《杨氏针灸荟萃》题字（与杨氏针灸第二代徐明光老师）\nTogether with Xu Mingguang, a second-generation inheritor of the Yang Family Acupuncture tradition, invited Mr. Li Ding to provide the calligraphic inscription for Yang Family Acupuncture Compendium."
+          text: "请李鼎先生为《杨氏针灸荟萃》题字（与杨氏针灸第二代徐明光老师）\nTogether with Xu Mingguang, a second-generation inheritor of the Yang Family Acupuncture tradition, invited Mr. Li Ding to provide the calligraphic inscription for Yang Family Acupuncture Compendium."
         },
         {
           src: "./得李鼎先生赠书.jpg",
@@ -398,7 +398,7 @@ const TRANSLATIONS = {
         },
         {
           src: "./与杨氏针灸第二代徐明光医生请李鼎先生为杨氏针灸荟萃题字.jpg",
-          text: "与请李鼎先生为《杨氏针灸荟萃》题字（与杨氏针灸第二代徐明光老师）\nTogether with Xu Mingguang, a second-generation inheritor of the Yang Family Acupuncture tradition, invited Mr. Li Ding to provide the calligraphic inscription for Yang Family Acupuncture Compendium."
+          text: "请李鼎先生为《杨氏针灸荟萃》题字（与杨氏针灸第二代徐明光老师）\nTogether with Xu Mingguang, a second-generation inheritor of the Yang Family Acupuncture tradition, invited Mr. Li Ding to provide the calligraphic inscription for Yang Family Acupuncture Compendium."
         },
         {
           src: "./得李鼎先生赠书.jpg",
