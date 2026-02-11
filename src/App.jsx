@@ -453,19 +453,21 @@ const formatTime12 = (time24) => {
   return `${hour12}:${m} ${suffix}`;
 };
 
-// Generate 30-minute intervals for the day
+// Safe slot generator using pre-calculated ranges to prevent infinite loops (The "Nuclear Option")
 const getDailySlots = (dateStr) => {
   const date = parseLocal(dateStr);
   const day = date.getDay(); // 0 = Sun, 6 = Sat
   
   if (day === 0) return []; // Sunday closed
 
-  const slots = [];
-  
-  // Logic for different days
-  // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-  
-  // Default Hours (Just in case, though all weekdays are covered now)
+  // Generate ALL possible 30-minute slots for a 24-hour day
+  const allPossibleSlots = [];
+  for (let h = 0; h < 24; h++) {
+    allPossibleSlots.push(`${h}:00`);
+    allPossibleSlots.push(`${h}:30`);
+  }
+
+  // Define ranges based on day of week
   let startHour = 9;
   let startMinute = 0;
   let endHour = 16;
@@ -493,30 +495,22 @@ const getDailySlots = (dateStr) => {
     endMinute = 0;
   }
 
-  // Iterate from start time until we hit or pass the end time
-  // Using a FOR loop with a hard limit to absolutely prevent infinite loops
-  let currentHour = startHour;
-  let currentMinute = startMinute;
+  // Filter the master list
+  // This avoids ANY while loops or complex increment logic
+  return allPossibleSlots.filter(slot => {
+    const [hStr, mStr] = slot.split(':');
+    const h = parseInt(hStr, 10);
+    const m = parseInt(mStr, 10);
 
-  for (let i = 0; i < 50; i++) { // Max 50 slots per day is plenty
-    // Condition to STOP:
-    // If current time is strictly AFTER the end time
-    if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
-      break;
-    }
-    
-    // Add slot
-    slots.push(`${currentHour}:${currentMinute === 0 ? '00' : currentMinute}`);
+    // Check if time is >= start time
+    if (h < startHour || (h === startHour && m < startMinute)) return false;
 
-    // Increment by 30 mins
-    currentMinute += 30;
-    if (currentMinute >= 60) {
-      currentMinute = 0;
-      currentHour += 1;
-    }
-  }
+    // Check if time is <= end time
+    // We want to INCLUDE the exact end time slot (e.g. 13:00 is allowed)
+    if (h > endHour || (h === endHour && m > endMinute)) return false;
 
-  return slots;
+    return true;
+  });
 };
 
 const timeToMinutes = (timeStr) => {
@@ -1163,6 +1157,31 @@ export default function App() {
       </div>
     );
   };
+
+  const renderAppointments = () => (
+    <div className="animate-in fade-in duration-500 min-h-screen">
+      <div className="bg-emerald-900 text-white py-16 px-6 text-center">
+        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t.bookingTitle}</h2>
+        <p className="text-emerald-100 max-w-2xl mx-auto">{t.bookingSubtitle}</p>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        {isAdmin && viewMode === 'week' ? (
+           <>
+             <div className="mb-6 flex justify-end">
+               <button 
+                 onClick={() => setViewMode('day')} 
+                 className="flex items-center gap-1 text-xs bg-stone-100 hover:bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold transition-colors"
+               >
+                 <List size={14}/> {t.dayView}
+               </button>
+             </div>
+             {renderWeekView()}
+           </>
+        ) : renderDailyView()}
+      </div>
+    </div>
+  );
 
   const renderWhatWeTreat = () => (
     <div className="animate-in fade-in duration-500 py-16 px-6">
