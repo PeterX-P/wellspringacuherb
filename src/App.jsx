@@ -43,8 +43,8 @@ import {
   Mail,
   HelpingHand,
   CheckCircle2,
-  XCircle
-  // Removed Quote to prevent potential import errors
+  XCircle,
+  Quote
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -364,6 +364,22 @@ const TRANSLATIONS = {
         }
       ]
     },
+    whatWeTreatPage: {
+      title: "治疗范围",
+      subtitle: "針對多種疾病的整體治療方案",
+      list: [
+        "女性健康與生殖相關問題，包括不孕症支持、月經不調、痛經、多囊卵巢綜合徵（PCOS）及更年期綜合徵等",
+        "壓力相關問題，包括焦慮、抑鬱及睡眠障礙等",
+        "盆底及泌尿功能障礙，包括產後或術後尿失禁、神經源性膀胱、尿頻尿急綜合徵及性功能障礙等",
+        "神經系統相關疾病，包括偏頭痛、神經性疼痛、面癱及帶狀皰疹後神經痛",
+        "肌肉骨骼疼痛，包括頸部、肩部、腰部及膝關節疼痛",
+        "代謝與內分泌相關問題，包括肥胖、甲狀腺功能異常、代謝綜合徵（高血壓、糖尿病及高血脂）",
+        "消化系統疾病，包括消化不良，腸易激綜合徵、炎症性腸病等",
+        "眼、耳、鼻相關問題，包括過敏、鼻竇炎、耳鳴、乾眼症、青光眼等",
+        "皮膚相關問題，包括痤瘡、濕疹、帶狀皰疹、蕁麻疹、皮下囊腫、皮脂腺炎等",
+        "美容針灸（面部年輕化及皮膚狀態改善），針灸減肥"
+      ]
+    },
     aboutPage: {
       title: "丰晓溟 哲学博士（PhD）、执业针灸师（LAc）",
       p1: "丰晓溟博士是美国马萨诸塞州注册执业针灸师及中药师，中国上海市针灸经络研究所的中医和针灸主治医师及上海中医药大学助理教授，兼具丰富的临床实践与科研经验。",
@@ -481,12 +497,12 @@ const getDailySlots = (dateStr) => {
   let currentHour = startHour;
   let currentMinute = startMinute;
 
-  // Safer loop
-  let safetyCounter = 0;
-  while (safetyCounter < 50) { // Safety break
-    safetyCounter++;
+  // Safer loop - prevents infinite loops and ensures loop terminates properly
+  for (let i = 0; i < 50; i++) { 
+    // Check end condition: Strictly AFTER the end time
+    // If end is 13:00, we allow 13:00 to be generated, then stop.
+    // Logic: if current > endHour OR (current == endHour && currentMinute > endMinute) -> BREAK
     
-    // Check if we've passed the end time
     if (currentHour > endHour || (currentHour === endHour && currentMinute > endMinute)) {
       break;
     }
@@ -952,6 +968,58 @@ export default function App() {
       </div>
     );
   };
+
+  const renderServices = () => (
+    <div className="animate-in fade-in duration-500 py-16 px-6">
+      <SectionHeader title={t.servicesPage.title} subtitle={t.servicesPage.subtitle} />
+      <div className="max-w-4xl mx-auto space-y-16">
+        <div className="grid gap-8">
+            {t.servicesPage.list.map((s, i) => (
+            <div key={i} className="flex flex-col md:flex-row gap-6 items-start bg-white p-6 border-b border-stone-100 last:border-0">
+                <div className="w-16 h-16 bg-emerald-50 flex items-center justify-center text-emerald-800 shrink-0 rounded-sm">
+                    {s.title.includes('Tuina') || s.title.includes('推拿') ? <HelpingHand size={32} /> : getServiceIcon(i)}
+                </div>
+                <div>
+                <h3 className="text-xl font-serif font-bold text-emerald-900 mb-2">{s.title}</h3>
+                <p className="text-stone-600 leading-relaxed">{s.desc}</p>
+                </div>
+            </div>
+            ))}
+        </div>
+
+        {/* Reviews Section - Added Safety Check for reviews existence */}
+        {t.servicesPage.reviews && (
+          <div className="border-t border-stone-200 pt-16">
+              <h3 className="text-2xl font-serif font-bold text-emerald-900 mb-8 text-center">{t.servicesPage.reviewsTitle}</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                  {t.servicesPage.reviews.map((review, i) => (
+                      <div key={i} className="bg-stone-50 p-6 rounded-lg border border-stone-100 shadow-sm hover:shadow-md transition-shadow">
+                          <div className="flex items-center gap-2 mb-3">
+                              <div className="flex text-emerald-500">
+                                  <Star size={14} fill="currentColor" />
+                                  <Star size={14} fill="currentColor" />
+                                  <Star size={14} fill="currentColor" />
+                                  <Star size={14} fill="currentColor" />
+                                  <Star size={14} fill="currentColor" />
+                              </div>
+                              <span className="text-xs text-stone-400 font-bold uppercase tracking-wider ml-auto">{review.date}</span>
+                          </div>
+                          {review.title && <h4 className="font-bold text-emerald-900 mb-2">{review.title}</h4>}
+                          <div className="relative">
+                              <Quote size={20} className="absolute -top-1 -left-2 text-emerald-100 transform -scale-x-100" />
+                              <p className="text-stone-600 text-sm leading-relaxed mb-4 pl-4 relative z-10">{review.text}</p>
+                          </div>
+                          <div className="mt-auto border-t border-stone-200 pt-3">
+                              <p className="font-bold text-emerald-800 text-sm">{review.name}</p>
+                          </div>
+                      </div>
+                  ))}
+              </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   const renderAbout = () => (
     <div className="animate-in fade-in duration-500 py-16 px-6">
