@@ -127,6 +127,7 @@ const TRANSLATIONS = {
     blockConfirm: "Block Selected Range",
     apptDetails: "Appointment Details",
     unblock: "Unblock",
+    closedMessage: "Clinic is closed on this day. Please select another date.",
     servicesPage: {
       title: "Our Specialties",
       subtitle: "Comprehensive care for your well-being",
@@ -305,6 +306,7 @@ const TRANSLATIONS = {
     blockConfirm: "封鎖選定範圍",
     apptDetails: "預約詳情",
     unblock: "解除封鎖",
+    closedMessage: "診所本日休息，請選擇其他日期。",
     servicesPage: {
       title: "專業服務",
       subtitle: "為您量身定制的整體療法",
@@ -456,9 +458,10 @@ const formatTime12 = (time24) => {
 // Safe slot generator using pre-calculated ranges to prevent infinite loops (The "Nuclear Option")
 const getDailySlots = (dateStr) => {
   const date = parseLocal(dateStr);
-  const day = date.getDay(); // 0 = Sun, 6 = Sat
+  const day = date.getDay(); // 0 = Sun, 1 = Mon, 6 = Sat
   
-  if (day === 0) return []; // Sunday closed
+  // IMMEDIATELY return empty array if it's Sunday (0), Monday (1), or Thursday (4)
+  if (day === 0 || day === 1 || day === 4) return []; 
 
   // Generate ALL possible 30-minute slots for a 24-hour day
   const allPossibleSlots = [];
@@ -473,15 +476,8 @@ const getDailySlots = (dateStr) => {
   let endHour = 16;
   let endMinute = 0;
 
-  // Monday (1) & Thursday (4): 9:30 AM - 1:00 PM (Last slot at 1:00 PM)
-  if (day === 1 || day === 4) {
-    startHour = 9;
-    startMinute = 30;
-    endHour = 13;
-    endMinute = 0;
-  }
   // Tuesday (2), Wednesday (3), Friday (5): 9:30 AM - 4:00 PM (Last slot at 4:00 PM)
-  else if (day === 2 || day === 3 || day === 5) {
+  if (day === 2 || day === 3 || day === 5) {
     startHour = 9;
     startMinute = 30;
     endHour = 16;
@@ -898,8 +894,10 @@ export default function App() {
             <div className="p-2 font-bold text-stone-400 text-center border-r">Time</div>
             {dates.map(dateStr => {
                const d = parseLocal(dateStr);
+               const dayOfWeek = d.getDay();
+               const isClosed = dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 4;
                return (
-                 <div key={dateStr} className={`p-2 text-center border-r font-bold ${d.getDay() === 0 ? 'bg-stone-100 text-stone-400' : 'text-emerald-900'}`}>
+                 <div key={dateStr} className={`p-2 text-center border-r font-bold ${isClosed ? 'bg-stone-100 text-stone-400' : 'text-emerald-900'}`}>
                    {d.toLocaleDateString(lang === 'en'?'en-US':'zh-TW', {weekday:'short'})} <br/>
                    {d.getDate()}
                  </div>
@@ -915,11 +913,12 @@ export default function App() {
               </div>
               {dates.map(dateStr => {
                 const day = parseLocal(dateStr).getDay();
-                if (day === 0) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
+                // Sun, Mon, Thu are closed
+                if (day === 0 || day === 1 || day === 4) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
                 
                 const [h, m] = time.split(':').map(Number);
-                // M-F ends at 16:00
-                if (day >= 1 && day <= 5) {
+                // Tue, Wed, Fri ends at 16:00
+                if (day === 2 || day === 3 || day === 5) {
                     if (h > 16 || (h === 16 && m > 0)) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
                 }
                 // Sat ends at 15:00
@@ -985,8 +984,8 @@ export default function App() {
               </div>
               
               <div className="grid grid-cols-7 text-center mb-2">
-                {(lang === 'en' ? ['S','M','T','W','T','F','S'] : ['日','一','二','三','四','五','六']).map(d => (
-                  <div key={d} className="text-xs font-bold text-stone-400">{d}</div>
+                {(lang === 'en' ? ['S','M','T','W','T','F','S'] : ['日','一','二','三','四','五','六']).map((d, i) => (
+                  <div key={`day-${i}`} className="text-xs font-bold text-stone-400">{d}</div>
                 ))}
               </div>
               
@@ -1067,7 +1066,7 @@ export default function App() {
           {dailySlots.length === 0 ? (
             <div className="text-center py-12 text-stone-500 bg-stone-50 border border-dashed border-stone-200">
               <Clock className="mx-auto mb-2 text-stone-400" />
-              <p>Closed on Sundays. Please select another date.</p>
+              <p>{t.closedMessage}</p>
             </div>
           ) : !isAllowedDate && !isAdmin ? (
              <div className="text-center py-12 text-red-500 bg-red-50 border border-dashed border-red-200">
@@ -1478,7 +1477,8 @@ export default function App() {
            </div>
            <div>
              <h4 className="text-white font-bold uppercase tracking-widest mb-4">Hours</h4>
-             <p>Mon - Fri: 9:00 AM - 4:00 PM</p>
+             <p>Mon & Thu: Closed</p>
+             <p>Tue, Wed, Fri: 9:30 AM - 4:00 PM</p>
              <p>Sat: 9:00 AM - 3:00 PM</p>
              <p>Sun: Closed</p>
            </div>
