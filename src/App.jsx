@@ -88,8 +88,9 @@ const TRANSLATIONS = {
     welcomeText: "We are dedicated to providing personalized care that addresses the root cause of your health concerns. Our clinic offers a sanctuary for healing, combining ancient wisdom with modern medical understanding.",
     bookingTitle: "Schedule Your Visit",
     bookingSubtitle: "Select a time that works for you. Private treatment sessions available every 30 minutes.",
-    janeBookingText: "Our scheduling is securely managed through Jane App. Please use the portal below to book your appointment.",
-    janeBookingBtn: "Open Booking Portal",
+    janeBookingText: "Our scheduling is securely managed through our dedicated Jane App portal. Clicking the button below will open a new, secure window to complete your booking.",
+    janeBookingBtn: "Open Secure Booking Portal",
+    janeSecurityNote: "You will be redirected to wellspring-acuherb.janeapp.com",
     selectDate: "Select Date",
     full: "Booked",
     blocked: "Blocked",
@@ -269,8 +270,9 @@ const TRANSLATIONS = {
     welcomeText: "我們致力於提供個性化的護理，解決您健康問題的根源。",
     bookingTitle: "預約您的診療",
     bookingSubtitle: "選擇適合您的時間。每30分鐘提供一個私人治療時段。",
-    janeBookingText: "我们的在线预约已全面接入 Jane App 系统。请直接在下方系统内选择时间并完成预约。",
-    janeBookingBtn: "在新窗口打开预约系统",
+    janeBookingText: "为了保障您的隐私安全，我们的在线预约系统已全面接入 Jane App。请点击下方按钮，在安全的独立窗口中完成预约。",
+    janeBookingBtn: "进入安全预约系统",
+    janeSecurityNote: "您将被安全重定向至 wellspring-acuherb.janeapp.com",
     selectDate: "選擇日期",
     full: "已預約",
     blocked: "保留",
@@ -377,7 +379,7 @@ const TRANSLATIONS = {
         "女性健康與生殖相關問題，包括不孕症支持、月經不調、痛經、多囊卵巢綜合徵（PCOS）及更年期綜合徵等",
         "壓力相關問題，包括焦慮、抑鬱及睡眠障礙等",
         "盆底及泌尿功能障礙，包括產後或術後尿失禁、神經源性膀胱、尿頻尿急綜合徵及性功能障礙等",
-        "神經系統相關疾病，包括偏頭痛、神經性疼痛、面癱及帶狀皰疹後神經痛",
+        "神經系統相关疾病，包括偏頭痛、神經性疼痛、面癱及帶狀皰疹後神經痛",
         "肌肉骨骼疼痛，包括頸部、肩部、腰部及膝關節疼痛",
         "代謝與內分泌相關問題，包括肥胖、甲狀腺功能異常、代謝綜合徵（高血壓、糖尿病及高血脂）",
         "消化系統疾病，包括消化不良，腸易激綜合徵、炎症性腸病等",
@@ -1173,46 +1175,41 @@ export default function App() {
   );
   */
 
-  // --- NEW INTEGRATED JANE APP APPOINTMENT PAGE ---
+  // --- NEW INTEGRATED JANE APP APPOINTMENT PAGE (FALLBACK TO DIRECT LINK) ---
   const renderAppointments = () => (
-    <div className="animate-in fade-in duration-500 min-h-screen flex flex-col bg-stone-50">
+    <div className="animate-in fade-in duration-500 min-h-[70vh] flex items-center justify-center bg-stone-50 py-16 px-6">
       
-      {/* Header Section */}
-      <div className="bg-emerald-900 text-white py-16 px-6 text-center shrink-0 shadow-md z-10 relative">
-        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t.bookingTitle}</h2>
-        <p className="text-emerald-100 max-w-2xl mx-auto mb-8 text-lg">{t.janeBookingText}</p>
+      <div className="max-w-2xl w-full bg-white rounded-lg shadow-xl overflow-hidden border border-stone-200 text-center">
+        {/* Top Accent Bar */}
+        <div className="h-2 bg-emerald-700 w-full"></div>
         
-        {/* Fallback Direct Link Button (Crucial for mobile safari/strict iframe blockers) */}
-        <a 
-          href="https://wellspring-acuherb.janeapp.com/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 bg-white text-emerald-900 px-8 py-4 rounded-sm font-bold uppercase tracking-widest hover:bg-emerald-50 hover:scale-105 transition-all shadow-lg text-sm"
-        >
-          {t.janeBookingBtn} <ArrowRight size={18} />
-        </a>
-      </div>
-
-      {/* Iframe Integration Section */}
-      <div className="flex-grow w-full max-w-6xl mx-auto px-0 sm:px-6 py-0 sm:py-8 h-[80vh] sm:h-auto sm:min-h-[800px]">
-         <div className="w-full h-full sm:h-[800px] bg-white sm:border border-stone-200 sm:rounded-sm overflow-hidden sm:shadow-lg relative">
-            {/* Loading Placeholder */}
-            <div className="absolute inset-0 flex items-center justify-center bg-stone-50 -z-10">
-               <div className="text-stone-400 font-bold uppercase tracking-widest animate-pulse">Loading Booking System...</div>
+        <div className="p-10 sm:p-16">
+            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8 text-emerald-700">
+               <Calendar size={40} />
             </div>
             
-            {/* Jane App Portal */}
-            <iframe
-              src="https://wellspring-acuherb.janeapp.com/"
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              title="Jane App Booking Portal"
-              className="w-full h-full absolute inset-0 z-10"
-              style={{ border: 'none' }}
-              allowFullScreen
-            ></iframe>
-         </div>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-emerald-950 mb-4">{t.bookingTitle}</h2>
+            <div className="h-0.5 w-16 bg-emerald-600 mx-auto mb-6"></div>
+            
+            <p className="text-stone-600 text-lg leading-relaxed mb-10">
+              {t.janeBookingText}
+            </p>
+            
+            <a 
+              href="https://wellspring-acuherb.janeapp.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 w-full sm:w-auto bg-emerald-800 text-white px-10 py-5 rounded-sm font-bold uppercase tracking-widest hover:bg-emerald-900 transition-all shadow-md hover:shadow-lg text-sm group"
+            >
+              {t.janeBookingBtn} 
+              <ArrowRight size={20} className="transform group-hover:translate-x-1 transition-transform" />
+            </a>
+            
+            <div className="mt-8 flex items-center justify-center gap-2 text-xs text-stone-400 font-medium">
+               <Lock size={12} />
+               <span>{t.janeSecurityNote}</span>
+            </div>
+        </div>
       </div>
     </div>
   );
