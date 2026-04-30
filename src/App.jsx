@@ -88,6 +88,8 @@ const TRANSLATIONS = {
     welcomeText: "We are dedicated to providing personalized care that addresses the root cause of your health concerns. Our clinic offers a sanctuary for healing, combining ancient wisdom with modern medical understanding.",
     bookingTitle: "Schedule Your Visit",
     bookingSubtitle: "Select a time that works for you. Private treatment sessions available every 30 minutes.",
+    janeBookingText: "Our scheduling is securely managed through Jane App. Please use the portal below to book your appointment.",
+    janeBookingBtn: "Open Booking Portal",
     selectDate: "Select Date",
     full: "Booked",
     blocked: "Blocked",
@@ -267,6 +269,8 @@ const TRANSLATIONS = {
     welcomeText: "我們致力於提供個性化的護理，解決您健康問題的根源。",
     bookingTitle: "預約您的診療",
     bookingSubtitle: "選擇適合您的時間。每30分鐘提供一個私人治療時段。",
+    janeBookingText: "我们的在线预约已全面接入 Jane App 系统。请直接在下方系统内选择时间并完成预约。",
+    janeBookingBtn: "在新窗口打开预约系统",
     selectDate: "選擇日期",
     full: "已預約",
     blocked: "保留",
@@ -564,7 +568,6 @@ export default function App() {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isBlockRangeOpen, setIsBlockRangeOpen] = useState(false); 
-  // New state for viewing specific booking details in week view
   const [selectedBookingDetails, setSelectedBookingDetails] = useState(null);
 
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -772,7 +775,6 @@ export default function App() {
     }
   };
 
-  // Batch Block Function
   const handleRangeBlockSubmit = async (e) => {
     e.preventDefault();
     if (!isAdmin) return;
@@ -789,7 +791,6 @@ export default function App() {
       const batch = writeBatch(db);
       
       slotsToBlock.forEach(slot => {
-        // Check if already blocked or booked to avoid duplicates/errors
         const existing = appointments.find(
           app => app.date === selectedDate && app.hour === slot
         );
@@ -854,11 +855,11 @@ export default function App() {
 
   // --- Renderers ---
 
+  // NOTE: Below are the original rendering functions for the internal custom calendar.
+  // We keep them preserved here so the logic remains intact for the future or for admins.
   const renderWeekView = () => {
-    // Generate dates for the week (Start from Sunday or Monday? Let's do Sunday for standard calendar view)
     const dates = [];
     const start = new Date(weekStartDate);
-    // Adjust to Sunday of the current week
     start.setDate(start.getDate() - start.getDay()); 
     
     for (let i = 0; i < 7; i++) {
@@ -867,12 +868,9 @@ export default function App() {
       dates.push(formatDate(d));
     }
 
-    // Determine all possible time slots for the week view (union of all daily slots)
-    // We know max range is 9am-5pm
     const allSlots = [];
     for (let h = 9; h <= 16; h++) {
-        for (let m = 0; m < 60; m += 30) { // Changed from 15 to 30
-            // Cap at 16:00 to keep grid clean
+        for (let m = 0; m < 60; m += 30) { 
             if (h === 16 && m > 0) break;
             allSlots.push(`${h}:${m === 0 ? '00' : m}`);
         }
@@ -889,7 +887,6 @@ export default function App() {
         </div>
 
         <div className="min-w-[800px] bg-white border border-stone-200 text-xs">
-          {/* Header Row */}
           <div className="grid grid-cols-8 border-b border-stone-200 bg-stone-50">
             <div className="p-2 font-bold text-stone-400 text-center border-r">Time</div>
             {dates.map(dateStr => {
@@ -905,7 +902,6 @@ export default function App() {
             })}
           </div>
 
-          {/* Time Rows */}
           {allSlots.map(time => (
             <div key={time} className="grid grid-cols-8 border-b border-stone-100 h-10 hover:bg-stone-50">
               <div className="p-2 text-center border-r font-mono text-stone-500 flex items-center justify-center bg-stone-50">
@@ -913,15 +909,12 @@ export default function App() {
               </div>
               {dates.map(dateStr => {
                 const day = parseLocal(dateStr).getDay();
-                // Sun, Mon, Thu are closed
                 if (day === 0 || day === 1 || day === 4) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
                 
                 const [h, m] = time.split(':').map(Number);
-                // Tue, Wed, Fri ends at 16:00
                 if (day === 2 || day === 3 || day === 5) {
                     if (h > 16 || (h === 16 && m > 0)) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
                 }
-                // Sat ends at 15:00
                 if (day === 6) {
                     if (h > 15 || (h === 15 && m > 0)) return <div key={dateStr} className="bg-stone-100 border-r"></div>;
                 }
@@ -967,7 +960,6 @@ export default function App() {
 
     return (
       <div className="flex flex-col md:flex-row gap-12">
-        {/* Calendar Sidebar */}
         <div className="md:w-1/3">
           <div className="bg-white p-6 shadow-lg border border-stone-100 sticky top-24">
             <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-stone-100 pb-2">
@@ -1006,8 +998,6 @@ export default function App() {
                     
                     const isAllowed = isDateAllowed(dateStr); 
 
-                    // Check for appointments on this day (for highlighting)
-                    // Modified: Only check if user is admin
                     const hasAppointments = appointments.some(a => a.date === dateStr && a.type === 'booking');
                     const shouldHighlight = isAdmin && hasAppointments;
                     
@@ -1085,7 +1075,6 @@ export default function App() {
                 const isPastTime = isToday && slotDate < now;
                 const isFull = remaining === 0;
 
-                // Hide unavailable slots for patients (booked, blocked, or past)
                 if (!isAdmin && (isBlocked || isFull || isPastTime)) {
                   return null;
                 }
@@ -1157,6 +1146,7 @@ export default function App() {
     );
   };
 
+  /* // --- PRIOR APPOINTMENT PAGE CODE (PRESERVED AS REQUESTED) ---
   const renderAppointments = () => (
     <div className="animate-in fade-in duration-500 min-h-screen">
       <div className="bg-emerald-900 text-white py-16 px-6 text-center">
@@ -1178,6 +1168,51 @@ export default function App() {
              {renderWeekView()}
            </>
         ) : renderDailyView()}
+      </div>
+    </div>
+  );
+  */
+
+  // --- NEW INTEGRATED JANE APP APPOINTMENT PAGE ---
+  const renderAppointments = () => (
+    <div className="animate-in fade-in duration-500 min-h-screen flex flex-col bg-stone-50">
+      
+      {/* Header Section */}
+      <div className="bg-emerald-900 text-white py-16 px-6 text-center shrink-0 shadow-md z-10 relative">
+        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">{t.bookingTitle}</h2>
+        <p className="text-emerald-100 max-w-2xl mx-auto mb-8 text-lg">{t.janeBookingText}</p>
+        
+        {/* Fallback Direct Link Button (Crucial for mobile safari/strict iframe blockers) */}
+        <a 
+          href="https://wellspring-acuherb.janeapp.com/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 bg-white text-emerald-900 px-8 py-4 rounded-sm font-bold uppercase tracking-widest hover:bg-emerald-50 hover:scale-105 transition-all shadow-lg text-sm"
+        >
+          {t.janeBookingBtn} <ArrowRight size={18} />
+        </a>
+      </div>
+
+      {/* Iframe Integration Section */}
+      <div className="flex-grow w-full max-w-6xl mx-auto px-0 sm:px-6 py-0 sm:py-8 h-[80vh] sm:h-auto sm:min-h-[800px]">
+         <div className="w-full h-full sm:h-[800px] bg-white sm:border border-stone-200 sm:rounded-sm overflow-hidden sm:shadow-lg relative">
+            {/* Loading Placeholder */}
+            <div className="absolute inset-0 flex items-center justify-center bg-stone-50 -z-10">
+               <div className="text-stone-400 font-bold uppercase tracking-widest animate-pulse">Loading Booking System...</div>
+            </div>
+            
+            {/* Jane App Portal */}
+            <iframe
+              src="https://wellspring-acuherb.janeapp.com/"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              title="Jane App Booking Portal"
+              className="w-full h-full absolute inset-0 z-10"
+              style={{ border: 'none' }}
+              allowFullScreen
+            ></iframe>
+         </div>
       </div>
     </div>
   );
